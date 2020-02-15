@@ -15,7 +15,8 @@ class TwitterClient:
 
 def run_bot():
     client = TwitterClient(**TWITTER_CREDENTIALS)
-    filename, message = create_wordcloud_for_next_movie()
+    filename, movie_title = create_wordcloud_for_next_movie()
+    message = f"{movie_title}\n\n#MovieWordCloud"
     client.tweet_image(filename, message)
 
 if __name__ == '__main__':
