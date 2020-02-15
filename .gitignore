@@ -136,3 +136,5 @@ tmp/
 subtittles/
 *.png
 cfg.py
+subtittles/
+movies.sqlite

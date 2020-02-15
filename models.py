@@ -1,5 +1,5 @@
 import datetime
-from peewee import (Model, CharField, DateTimeField, SqliteDatabase, CompositeKey)
+from peewee import (Model, CharField, IntegerField, DateTimeField, SqliteDatabase)
 
 database = SqliteDatabase(None)
 
@@ -12,18 +12,29 @@ class BaseModel(Model):
 
 class Movie(BaseModel):
     name = CharField()
-    imdb_id = CharField()
+    year = IntegerField()
+    imdb_id = CharField(primary_key=True)
     opensubtittle_id = CharField()
     language_id = CharField()
     srt_file = CharField()
     last_upload = DateTimeField(null=True)
-
-    class Meta:
-        primary_key = CompositeKey('imdb_id', 'opensubtittle_id')
-
+    created = DateTimeField(default=datetime.datetime.now)
 
 def init_db(db_path):
     database.init(db_path)
     database.connect()
     database.create_tables([Movie,])
     return database
+
+def get_next_movie():
+    movie = Movie.select() \
+        .where(Movie.last_upload.is_null()) \
+        .order_by(Movie.created.desc()) \
+        .first()
+    if movie:
+        return movie
+
+    movie = Movie.select() \
+        .order_by(Movie.last_upload.asc()) \
+        .first()
+    return movie

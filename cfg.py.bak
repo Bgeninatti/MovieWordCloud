@@ -1,7 +1,11 @@
-OPENSUBTITTLES_USER = 'bgeninatti'
-OPENSUBTITTLES_PASS = 'aroldo123'
+OPENSUBTITTLES_USER = ''
+OPENSUBTITTLES_PASS = ''
 
 SRT_FOLDER = 'subtittles'
+PNG_FOLDER = 'wordclouds'
 
 DEFAULT_LANGUAGE_ID = 'eng'
-DB_PATH = 'movies.db'
+
+DB_PATH = 'movies.sqlite'
+
+STOP_WORDS_JSON_FILE = 'stop_words.json'
