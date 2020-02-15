@@ -1,26 +1,12 @@
+
 import os
-import json
 import srt
-from datetime import datetime
-from helpers import (open_srt, tokenize_subtittle, get_stop_words, create_wordclod, get_top250)
-from cfg import SRT_FOLDER, DEFAULT_LANGUAGE_ID, DB_PATH, OPENSUBTITTLES_USER, OPENSUBTITTLES_PASS, PNG_FOLDER
-from models import Movie, init_db, get_next_movie
+from helpers import open_srt, get_top250
+from cfg import (SRT_FOLDER, DEFAULT_LANGUAGE_ID, DB_PATH, OPENSUBTITTLES_USER,
+                 OPENSUBTITTLES_PASS)
+from models import Movie, init_db
 from opensubitles import OpenSubtitles
 
-
-def create_wordcloud_for_next_movie():
-    init_db(DB_PATH)
-    movie = get_next_movie()
-
-    print(f"Selected movie: Name={movie.name}, LanguageId={DEFAULT_LANGUAGE_ID}")
-    with open(movie.srt_file, encoding="utf-8") as srt_file:
-        subtittles = open_srt(srt_file)
-    words = ' '.join(map(tokenize_subtittle, subtittles))
-    stop_words = get_stop_words()
-    destination = os.path.join(PNG_FOLDER, f"{movie.name} ({movie.year}).png")
-    create_wordclod(words, stop_words, destination)
-    movie.last_upload = datetime.now()
-    movie.save()
 
 def download_top_250():
     init_db(DB_PATH)

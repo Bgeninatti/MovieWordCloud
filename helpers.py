@@ -1,17 +1,13 @@
 import os
-import wordcloud
-import nltk
 import srt
 import string
 import re
 import imdb
-import random
 import json
-import numpy as np
-import matplotlib.pyplot as plt
+from datetime import datetime
 from wordcloud import WordCloud
-from collections import Counter
-from cfg import OPENSUBTITTLES_USER, OPENSUBTITTLES_PASS, STOP_WORDS_JSON_FILE
+from models import Movie, init_db, get_next_movie
+from cfg import DB_PATH, STOP_WORDS_JSON_FILE, PNG_FOLDER, DEFAULT_LANGUAGE_ID
 
 # SRT Helpers
 def open_srt(srt_file):
@@ -33,6 +29,22 @@ def get_stop_words():
         return json.loads(json_file.read())
 
 # Wordcloud helpers
+def create_wordcloud_for_next_movie():
+    init_db(DB_PATH)
+    movie = get_next_movie()
+
+    print(f"Selected movie: Name={movie.name}, LanguageId={DEFAULT_LANGUAGE_ID}")
+    with open(movie.srt_file, encoding="utf-8") as srt_file:
+        subtittles = open_srt(srt_file)
+    words = ' '.join(map(tokenize_subtittle, subtittles))
+    stop_words = get_stop_words()
+    wordcloud_title = f"{movie.name} ({movie.year})"
+    destination = os.path.join(PNG_FOLDER, f"{wordcloud_title}.png")
+    create_wordclod(words, stop_words, destination)
+    movie.last_upload = datetime.now()
+    movie.save()
+    return destination, wordcloud_title
+
 def create_wordclod(words, stop_words, filename):
     cloud = WordCloud(background_color="white",
                       max_words=200,
