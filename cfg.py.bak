@@ -1,0 +1,7 @@
+OPENSUBTITTLES_USER = 'bgeninatti'
+OPENSUBTITTLES_PASS = 'aroldo123'
+
+SRT_FOLDER = 'subtittles'
+
+DEFAULT_LANGUAGE_ID = 'eng'
+DB_PATH = 'movies.db'
