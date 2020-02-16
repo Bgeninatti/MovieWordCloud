@@ -14,9 +14,9 @@ class Movie(BaseModel):
     name = CharField()
     year = IntegerField()
     imdb_id = CharField(primary_key=True)
-    opensubtittle_id = CharField()
-    language_id = CharField()
-    srt_file = CharField()
+    opensubtittle_id = CharField(null=True)
+    language_id = CharField(null=True)
+    srt_file = CharField(null=True)
     last_upload = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
 
