@@ -1,6 +1,5 @@
 import tweepy
-from cfg import TWITTER_CREDENTIALS
-from helpers import create_wordcloud_for_next_movie
+
 
 class TwitterClient:
 
@@ -11,15 +10,3 @@ class TwitterClient:
 
     def tweet_image(self, filename, message):
         self.api.update_with_media(filename, status=message)
-
-
-def run_bot():
-    client = TwitterClient(**TWITTER_CREDENTIALS)
-    filename, movie_title = create_wordcloud_for_next_movie()
-    message = f"{movie_title}\n\n#MovieWordCloud"
-    client.tweet_image(filename, message)
-
-if __name__ == '__main__':
-    run_bot()
-
-
