@@ -28,13 +28,14 @@ def init_db(db_path):
 
 def get_next_movie():
     movie = Movie.select() \
-        .where(Movie.last_upload.is_null()) \
+        .where((Movie.last_upload.is_null()) & (Movie.opensubtittle_id.is_null(False))) \
         .order_by(Movie.created.desc()) \
         .first()
     if movie:
         return movie
 
     movie = Movie.select() \
+        .where(Movie.opensubtittle_id.is_null(False)) \
         .order_by(Movie.last_upload.asc()) \
         .first()
     return movie
