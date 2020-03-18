@@ -25,7 +25,7 @@ def download_subtitles():
                 print(f"Attempt to download subtitle: subtitle_id={sub['IDSubtitleFile']}")
                 srt_filename = os.path.join(SRT_FOLDER, f"{sub['IDSubtitleFile']}.srt")
                 srt_file = os_client.download_subtitle(sub['SubDownloadLink'], "utf-8")
-                subtitles = open_srt(srt_file)
+                open_srt(srt_file) # Just to validate the srt encoding
                 srt_file.seek(0)
                 with open(srt_filename, "w") as srtf:
                     srtf.write(srt_file.read())
@@ -45,12 +45,14 @@ def download_subtitles():
                 continue
             except IndexError as error:
                 print("No valid subtitle found")
+                sub = None
                 break
 
-        movie.opensubtittle_id = sub['IDSubtitleFile'],
-        movie.language_id = DEFAULT_LANGUAGE_ID,
-        movie.srt_file = srt_filename
-        movie.save()
+        if sub is not None:
+            movie.opensubtittle_id = sub['IDSubtitleFile']
+            movie.language_id = DEFAULT_LANGUAGE_ID
+            movie.srt_file = srt_filename
+            movie.save()
 
 if __name__ == '__main__':
     download_subtitles()

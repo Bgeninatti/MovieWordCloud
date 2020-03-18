@@ -1,13 +1,18 @@
 import os
-import srt
 import string
 import re
-import imdb
 import json
 from datetime import datetime
+from io import StringIO
+
+import requests
+import srt
+import imdb
+from lxml import etree
 from wordcloud import WordCloud
-from models import Movie, init_db, get_next_movie
+from models import init_db, get_next_movie
 from cfg import DB_PATH, STOP_WORDS_JSON_FILE, PNG_FOLDER, DEFAULT_LANGUAGE_ID
+
 
 # SRT Helpers
 def open_srt(srt_file):
@@ -57,3 +62,13 @@ def create_wordclod(words, stop_words, filename):
 def get_top250():
     ia = imdb.IMDb()
     return ia.get_top250_movies()
+
+def get_most_popular_movies_ids():
+    MOST_POPULARS_MOVIES_URL = 'https://www.imdb.com/chart/moviemeter/?sort=rk,asc'
+    IMDB_IDS_XPATH = '//tbody[contains(@class, "lister-list")]/tr/td[2]/a/@href'
+    htmlparser = etree.HTMLParser()
+    response = requests.get(MOST_POPULARS_MOVIES_URL)
+    result_tree = etree.parse(StringIO(response.text), htmlparser)
+    hrefs = result_tree.xpath(IMDB_IDS_XPATH)
+    return list(map(lambda x: re.findall(r'\d+', x).pop(), hrefs))
+
