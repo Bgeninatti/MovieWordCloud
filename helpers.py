@@ -12,6 +12,10 @@ from lxml import etree
 from wordcloud import WordCloud
 from models import init_db, get_next_movie
 from cfg import DB_PATH, STOP_WORDS_JSON_FILE, PNG_FOLDER, DEFAULT_LANGUAGE_ID
+from logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 # SRT Helpers
@@ -38,7 +42,7 @@ def create_wordcloud_for_next_movie():
     init_db(DB_PATH)
     movie = get_next_movie()
 
-    print(f"Selected movie: Name={movie.name}, LanguageId={DEFAULT_LANGUAGE_ID}")
+    logger.info("Selected movie: Name='%s', LanguageId='%s'", movie.name, DEFAULT_LANGUAGE_ID)
     with open(movie.srt_file, encoding="utf-8") as srt_file:
         subtittles = open_srt(srt_file)
     words = ' '.join(map(tokenize_subtittle, subtittles))
