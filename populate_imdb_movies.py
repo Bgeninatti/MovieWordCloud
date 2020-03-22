@@ -9,10 +9,14 @@ def download_top_250(excluded_movies_ids):
     new_movies = [m for m in top_movies if m.movieID not in excluded_movies_ids]
     print(f"New movies found in top 250: new_movies={len(new_movies)}")
     for movie in new_movies:
-        print(f"Adding movie to database: name={movie}, imdb_id={movie.movieID}")
+        year = movie.data.get('year')
+        if not year:
+            print(f"Discarding movie: reason='Couldn't find the year in IMDB', name={movie}, imdb_id={movie.movieID}")
+            continue
+        print(f"Adding movie to database: name='{movie}', imdb_id={movie.movieID}")
         Movie.create(
             name=movie,
-            year=movie.data['year'],
+            year=year,
             imdb_id=movie.movieID
         )
 
@@ -23,10 +27,14 @@ def download_most_populars(excluded_movies_ids):
     print(f"New movies found in most populars: new_movies={len(new_movies)}")
     for m_id in new_movies:
         movie = ia.get_movie(m_id)
-        print(f"Adding movie to database: name={movie}, imdb_id={movie.movieID}")
+        year = movie.data.get('year')
+        if not year:
+            print(f"Discarding movie: reason='Couldn't find the year in IMDB', name='{movie}', imdb_id={movie.movieID}")
+            continue
+        print(f"Adding movie to database: name='{movie}', imdb_id={movie.movieID}")
         Movie.create(
             name=movie,
-            year=movie.data['year'],
+            year=movie.data.get('year'),
             imdb_id=movie.movieID
         )
 
