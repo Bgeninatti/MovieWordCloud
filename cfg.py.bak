@@ -1,6 +1,3 @@
-OPENSUBTITTLES_USER = ''
-OPENSUBTITTLES_PASS = ''
-
 SRT_FOLDER = 'subtittles'
 PNG_FOLDER = 'wordclouds'
 

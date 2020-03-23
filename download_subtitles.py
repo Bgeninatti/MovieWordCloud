@@ -2,8 +2,7 @@
 import os
 import srt
 from helpers import open_srt
-from cfg import (SRT_FOLDER, DEFAULT_LANGUAGE_ID, DB_PATH, OPENSUBTITTLES_USER,
-                 OPENSUBTITTLES_PASS)
+from cfg import SRT_FOLDER, DEFAULT_LANGUAGE_ID, DB_PATH
 from models import Movie, init_db
 from opensubitles import OpenSubtitles
 from logger import get_logger
@@ -14,7 +13,7 @@ logger = get_logger(__name__)
 def download_subtitles():
     init_db(DB_PATH)
     movies = Movie.select().where(Movie.opensubtittle_id.is_null())
-    os_client = OpenSubtitles(OPENSUBTITTLES_USER, OPENSUBTITTLES_PASS)
+    os_client = OpenSubtitles()
     logger.info("Movies with missing subtitles: movies_count=%s", len(movies))
 
     for movie in movies:
