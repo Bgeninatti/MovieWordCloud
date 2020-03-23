@@ -59,7 +59,9 @@ def create_wordclod(words, stop_words, filename):
                       max_words=200,
                       stopwords=set(stop_words),
                       width=1280,
-                      height=720)
+                      height=720,
+                      collocations=False) # Related to issue_5: Duplicated words in word cloud.
+                                          # With this parameter in False we avoid repeated words.
     cloud.generate(words)
     cloud.to_file(filename)
 
