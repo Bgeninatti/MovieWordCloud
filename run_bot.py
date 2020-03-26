@@ -1,6 +1,8 @@
-from cfg import TWITTER_CREDENTIALS
-from helpers import create_wordcloud_for_next_movie
-from twitter_bot import TwitterClient
+
+
+from lib.cfg import TWITTER_CREDENTIALS
+from lib.helpers import create_wordcloud_for_next_movie
+from lib.twitter_bot import TwitterClient
 
 
 def tweet_movie_wordcloud():
@@ -11,5 +13,4 @@ def tweet_movie_wordcloud():
 
 if __name__ == '__main__':
     tweet_movie_wordcloud()
-
 
