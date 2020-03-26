@@ -6,6 +6,7 @@ import requests
 import srt
 
 from .cfg import DEFAULT_LANGUAGE_ID, SRT_FOLDER
+from .helpers import get_headers
 from .logger import get_logger
 
 logger = get_logger(__name__)
@@ -53,9 +54,6 @@ class OpenSubtitles:
 
     SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language_id}'
 
-    def _get_headers(self):
-        return {'User-agent': 'TemporaryUserAgent v1.2'}
-
     def download_subtitle(self, sub_download_link, encoding="ISO-8859-1"):
         url = sub_download_link
         response = requests.get(url)
@@ -67,7 +65,7 @@ class OpenSubtitles:
 
     def search_subtitles(self, imdb_id, language_id):
         url = self.SEARCH_BY_IMDB_URL.format(imdb_id=imdb_id, language_id=language_id)
-        headers = self._get_headers()
+        headers = get_headers()
         response = requests.get(url, headers=headers)
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
@@ -85,6 +83,7 @@ class OpenSubtitles:
             srt_file = self.download_subtitle(sub['SubDownloadLink'], "utf-8")
             subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file)
             if subtitle.is_valid():
+                subtitle.save_srt_file()
                 break
 
         if not subtitle:

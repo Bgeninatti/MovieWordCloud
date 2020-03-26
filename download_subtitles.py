@@ -16,7 +16,7 @@ def download_subtitles():
 
     for movie in movies:
         subtitle = os_client.get_valid_subtitle(movie)
-        if subtitle is not None:
+        if subtitle:
             movie.opensubtittle_id = subtitle.subtitle_id
             movie.language_id = subtitle.language
             movie.srt_file = subtitle.srt_location

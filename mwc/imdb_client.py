@@ -7,6 +7,8 @@ import imdb
 from lxml import etree
 
 from .logger import get_logger
+from .helpers import get_headers, tokenize_text
+
 
 logger = get_logger(__name__)
 
@@ -46,5 +48,11 @@ class ImdbClient:
         return tuple(movies)
 
     def search_movie_by_keyword(self, keyword):
-
-        return self._client.search_keyword(keyword)
+        query = tokenize_text(keyword).replace('  ', '_')
+        first_letter = query[0]
+        url = self.SEARCH_URL.format(first_letter=first_letter, query=query)
+        r = requests.get(url, headers=get_headers())
+        data = r.json()
+        if 'd' not in data.keys():
+            return
+        return self._client.get_movie(data['d'][0]['id'].replace('tt', ''))

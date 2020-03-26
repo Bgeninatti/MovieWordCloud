@@ -50,13 +50,23 @@ def get_next_movie(imdb_id=None):
         .first
     return movie
 
-def save_imdb_movie(imdb_movie):
+def get_or_create_by_imdb_movie(imdb_movie):
+    movie = Movie.select().where(Movie.imdb_id == imdb_movie.movieID).first()
+    logger.info("Searching IMDB movie in database: name='%s', imdb_id=%s",
+                imdb_movie, imdb_movie.movieID)
+    if movie:
+        logger.info("IMDB movie found in database: name='%s', imdb_id=%s",
+                    imdb_movie, imdb_movie.movieID)
+        return movie
+
     year = imdb_movie.data.get('year')
     if not year:
-        raise ValueError("Couldn't find the year in IMDB")
+        logger.error("Error adding movie to database: reason='%s', name='%s', imdb_id=%s",
+                     "Couldn't find the year in IMDB", imdb_movie, imdb_movie.movieID)
+        return
     logger.info("Adding movie to database: name='%s', imdb_id=%s",
                 imdb_movie, imdb_movie.movieID)
-    Movie.create(
+    return Movie.create(
         name=imdb_movie,
         year=imdb_movie.data.get('year'),
         imdb_id=imdb_movie.movieID
