@@ -1,9 +1,9 @@
 
 
-from lib.cfg import DB_PATH
-from lib.imdb_client import ImdbClient
-from lib.logger import get_logger
-from lib.models import Movie, init_db, save_imdb_movie
+from mwc.cfg import DB_PATH
+from mwc.imdb_client import ImdbClient
+from mwc.logger import get_logger
+from mwc.models import Movie, init_db, save_imdb_movie
 
 logger = get_logger(__name__)
 

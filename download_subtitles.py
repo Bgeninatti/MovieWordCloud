@@ -1,9 +1,9 @@
 
 
-from lib.cfg import DB_PATH
-from lib.logger import get_logger
-from lib.models import Movie, init_db
-from lib.opensubitles import OpenSubtitles
+from mwc.cfg import DB_PATH
+from mwc.logger import get_logger
+from mwc.models import Movie, init_db
+from mwc.opensubitles import OpenSubtitles
 
 logger = get_logger(__name__)
 
@@ -15,10 +15,10 @@ def download_subtitles():
     logger.info("Movies with missing subtitles: movies_count=%s", len(movies))
 
     for movie in movies:
-        subtitle = os_client.get_valid_subtitle(movie.imdb_id)
+        subtitle = os_client.get_valid_subtitle(movie)
         if subtitle is not None:
-            movie.opensubtittle_id = subtitle.metadata['IDSubtitleFile']
-            movie.language_id = subtitle.metadata['SubLanguageID']
+            movie.opensubtittle_id = subtitle.subtitle_id
+            movie.language_id = subtitle.language
             movie.srt_file = subtitle.srt_location
             movie.save()
 

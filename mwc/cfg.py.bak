@@ -1,0 +1,15 @@
+SRT_FOLDER = 'subtittles'
+PNG_FOLDER = 'wordclouds'
+
+DEFAULT_LANGUAGE_ID = 'eng'
+
+DB_PATH = ''
+
+STOP_WORDS_JSON_FILE = 'stop_words.json'
+
+TWITTER_CREDENTIALS = {
+    'consumer_key': '',
+    'consumer_secret': '',
+    'access_token': '',
+    'access_token_secret': ''
+}
