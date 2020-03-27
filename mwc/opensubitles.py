@@ -35,9 +35,6 @@ class Subtitle:
                 return False
             logger.error("Error: reason='%s'", error)
             return False
-        except (UnicodeEncodeError, UnicodeDecodeError) as error:
-            logger.error("Error: reason='%s'", error)
-            return False
         return True
 
     def save_srt_file(self):
@@ -80,7 +77,11 @@ class OpenSubtitles:
 
         subtitle = None
         for sub in all_subtitles:
-            srt_file = self.download_subtitle(sub['SubDownloadLink'], "utf-8")
+            try:
+                srt_file = self.download_subtitle(sub['SubDownloadLink'], "utf-8")
+            except (UnicodeEncodeError, UnicodeDecodeError) as error:
+                logger.error("Error: reason='%s'", error)
+                continue
             subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file)
             if subtitle.is_valid():
                 subtitle.save_srt_file()
