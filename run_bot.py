@@ -2,7 +2,8 @@
 
 from datetime import datetime
 
-from mwc.cfg import DB_PATH, DEFAULT_LANGUAGE_ID, TWITTER_CREDENTIALS
+from mwc.cfg import (DB_PATH, DEFAULT_LANGUAGE_ID, TWITTER_ACCOUNT_NAME,
+                     TWITTER_CREDENTIALS)
 from mwc.helpers import get_stop_words
 from mwc.logger import get_logger
 from mwc.models import get_next_movie, init_db
@@ -20,8 +21,7 @@ def tweet_movie_wordcloud():
     wc = WordCloud(movie, stop_words)
     wc.create()
     client = TwitterClient(**TWITTER_CREDENTIALS)
-    message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
-    client.tweet_image(wc.filename, message)
+    client.tweet_wordcloud(movie, wc.filename)
     movie.last_upload = datetime.now()
     movie.save()
 

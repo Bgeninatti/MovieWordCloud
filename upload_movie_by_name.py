@@ -45,8 +45,7 @@ def main(query):
     wc = WordCloud(movie, stop_words)
     wc.create()
     client = TwitterClient(**TWITTER_CREDENTIALS)
-    message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
-    client.tweet_image(wc.filename, message)
+    client.tweet_wordcloud(movie, wc.filename)
     movie.last_upload = datetime.now()
     movie.save()
 
