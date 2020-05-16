@@ -1,5 +1,5 @@
 import tweepy
-from cfg import TWITTER_ACCOUNT_NAME
+from .cfg import TWITTER_ACCOUNT_NAME
 
 
 class TwitterClient:
@@ -17,7 +17,7 @@ class TwitterClient:
 
     def tweet_wordcloud(self, movie, wc_filename):
         message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
-        answer_tweet = f"{TWITTER_ACCOUNT_NAME}\n\nhttps://www.imdb.com/title/tt{movie.imdb_id}"
+        answer_tweet = f"{TWITTER_ACCOUNT_NAME}\n\n https://www.imdb.com/title/tt{movie.imdb_id}"
         image_tweet = self.tweet_image(wc_filename, message)
         self.answer_tweet(answer_tweet, image_tweet.id)
 
