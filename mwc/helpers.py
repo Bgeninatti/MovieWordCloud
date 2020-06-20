@@ -10,6 +10,8 @@ def tokenize_text(text):
     excluded_chars = str.maketrans('', '', string.punctuation + "¡¿1234567890\\\"")
     words = text.translate(excluded_chars).strip().lower().replace('\n', ' ')
     words = re.sub(' +', ' ', words)
+    # exclude words of two characters or less
+    words = ' '.join([w for w in words.split(' ') if len(w) > 2])
     return words
 
 def get_stop_words():
