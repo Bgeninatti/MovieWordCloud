@@ -68,8 +68,13 @@ class OpenSubtitles:
         return sorted_subtitles
 
     def get_valid_subtitle(self, movie, language=DEFAULT_LANGUAGE_ID):
+        try:
+            all_subtitles = self.search_subtitles(movie.imdb_id, language)
+        except json.error as error:
+            # Sometimes opensubtitles do not return a JSON for some reason :/
+            logger.error("Error decoding OpenSubtitle response: reason='%s'", error)
+            return
 
-        all_subtitles = self.search_subtitles(movie.imdb_id, language)
         logger.info(
             "Subtitles found: imdb_id=%s, subtitles_count=%d",
             movie.imdb_id, len(all_subtitles)
