@@ -31,6 +31,10 @@ def init_db(db_path):
     database.create_tables([Movie,])
     return database
 
+def get_all_movies_with_subtitles():
+    return Movie.select() \
+        .where(Movie.opensubtittle_id.is_null(False) & Movie.srt_file.is_null(False))
+
 def get_next_movie(imdb_id=None):
     if imdb_id:
         movie = Movie.select().where(Movie.imdb_id == imdb_id).first()

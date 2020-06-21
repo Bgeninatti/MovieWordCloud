@@ -19,7 +19,7 @@ def tweet_movie_wordcloud():
     logger.info("Selected movie: Name='%s', LanguageId='%s'", movie.name, DEFAULT_LANGUAGE_ID)
     stop_words = get_stop_words()
     wc = WordCloud(movie, stop_words)
-    wc.create()
+    wc.to_file()
     client = TwitterClient(**TWITTER_CREDENTIALS)
     client.tweet_wordcloud(movie, wc.filename)
     movie.last_upload = datetime.now()
