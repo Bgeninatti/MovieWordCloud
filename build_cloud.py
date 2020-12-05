@@ -1,13 +1,12 @@
-import argparse
-from datetime import datetime
 
-from mwc.cfg import DB_PATH, TWITTER_CREDENTIALS
+import argparse
+
+from mwc.cfg import DB_PATH
 from mwc.helpers import get_stop_words
 from mwc.imdb_client import ImdbClient
 from mwc.logger import get_logger
-from mwc.models import Movie, get_or_create_by_imdb_movie, init_db
+from mwc.models import get_or_create_by_imdb_movie, init_db
 from mwc.opensubitles import OpenSubtitles
-from mwc.twitter_bot import TwitterClient
 from mwc.wordcloud import WordCloud
 
 logger = get_logger(__name__)
@@ -16,11 +15,12 @@ logger = get_logger(__name__)
 
 parser = argparse.ArgumentParser(
     description="Search a movie in IMDB based on the provided keyword. Search the subtitle in OpenSubtitles, generates the " + \
-                "wordcloud and tweets the result")
+                "wordcloud witouth tweeting the result")
 parser.add_argument('-q', '--query', dest="query", required=True,
                     help='Query to search the movie')
 
-def main(query):
+
+def search_and_build(query):
     # Search movie in IMDB
     imdb_client = ImdbClient()
     imdb_movie = imdb_client.search_movie_by_keyword(query)
@@ -39,17 +39,11 @@ def main(query):
         movie.save()
     else:
         return
-
-    # Create wordcloud and tweet
     stop_words = get_stop_words()
     wc = WordCloud(movie, stop_words)
     wc.to_file()
-    client = TwitterClient(**TWITTER_CREDENTIALS)
-    client.tweet_wordcloud(movie, wc.filename)
-    movie.last_upload = datetime.now()
-    movie.save()
 
 if __name__ == '__main__':
     args = vars(parser.parse_args())
     init_db(DB_PATH)
-    main(args['query'])
+    search_and_build(args['query'])
