@@ -18,7 +18,7 @@ class OpenSubtitles:
 
     SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language_id}'
 
-    def download_subtitle(self, sub_download_link, encoding="ISO-8859-1"):
+    def download_subtitle(self, sub_download_link, encoding="utf-8"):
         url = sub_download_link
         response = requests.get(url)
         try:
@@ -37,7 +37,7 @@ class OpenSubtitles:
     def get_valid_subtitle(self, movie, language=DEFAULT_LANGUAGE_ID):
         try:
             all_subtitles = self.search_subtitles(movie.imdb_id, language)
-        except json.error as error:
+        except json.JSONDecodeError as error:
             # Sometimes opensubtitles do not return a JSON for some reason :/
             logger.error("Error decoding OpenSubtitle response: reason='%s'", error)
             return
