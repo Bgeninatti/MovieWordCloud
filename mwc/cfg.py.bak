@@ -13,4 +13,3 @@ TWITTER_CREDENTIALS = {
     'access_token': '',
     'access_token_secret': ''
 }
-TWITTER_ACCOUNT_NAME = '@MovieWordCloud'
