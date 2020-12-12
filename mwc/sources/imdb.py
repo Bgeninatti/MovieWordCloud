@@ -6,8 +6,8 @@ import requests
 import imdb
 from lxml import etree
 
-from .logger import get_logger
-from .helpers import get_headers, tokenize_text
+from ..logger import get_logger
+from ..helpers import get_headers, tokenize_text
 
 
 logger = get_logger(__name__)
@@ -44,6 +44,7 @@ class ImdbClient:
                     "new_movies=%d, excluded_movies=%d",
                     len(ids_to_download),
                     len([m for m in movies_ids if m in exclude_ids]))
+        # TODO: This can be async
         movies = [self._client.get_movie(m_id) for m_id in ids_to_download]
         return tuple(movies)
 
