@@ -13,6 +13,8 @@ from mwc.subtitles.opensubtitles import OpenSubtitles
 from mwc.twitter_bot import TwitterClient
 from mwc.wordcloud import WordCloud
 
+from mwc.sources.cli import sync_imdb
+
 logger = get_logger(__name__)
 
 
@@ -22,7 +24,10 @@ def main(ctx):
     """MovieWordCloud CLI"""
     ctx.ensure_object(dict)
 
+main.add_command(sync_imdb)
 
+if __name__ == '__main__':
+    main(obj={})
 
 
 def tweet_movie_wordcloud():
@@ -38,16 +43,13 @@ def tweet_movie_wordcloud():
     movie.save()
 
 
-if __name__ == '__main__':
-    init_db(DB_PATH)
-    imdb_client = ImdbClient()
-    existing_movies = {m.imdb_id for m in Movie.select()}
-    download_top_250(imdb_client, existing_movies)
-    download_most_populars(imdb_client, existing_movies)
-    args = vars(parser.parse_args())
-    init_db(DB_PATH)
-    search_and_build(args['query'])
+# if __name__ == '__main__':
+    # init_db(DB_PATH)
+    # imdb_client = ImdbClient()
+    # existing_movies = {m.imdb_id for m in Movie.select()}
+    # download_top_250(imdb_client, existing_movies)
+    # download_most_populars(imdb_client, existing_movies)
+    # args = vars(parser.parse_args())
+    # init_db(DB_PATH)
+    # search_and_build(args['query'])
 
-
-
-main.add_command(upload_item)

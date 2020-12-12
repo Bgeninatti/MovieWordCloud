@@ -20,7 +20,7 @@ class ImdbClient:
     IMDB_IDS_XPATH = '//tbody[contains(@class, "lister-list")]/tr/td[2]/a/@href'
     SEARCH_URL = 'https://v2.sg.media-imdb.com/suggestion/{first_letter}/{query}.json'
 
-    def __init__(self, imdb_id):
+    def __init__(self):
         self._client = imdb.IMDb()
 
     def get_movie(self, imdb_id):
