@@ -4,7 +4,7 @@ from wordcloud import WordCloud as WC
 
 from .cfg import PNG_FOLDER
 from .helpers import tokenize_text
-from .opensubitles import Subtitle
+from .subtitles.subtitle import Subtitle
 
 
 class WordCloud:

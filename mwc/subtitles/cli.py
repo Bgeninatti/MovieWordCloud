@@ -1,14 +1,19 @@
 
+import click
 
-from mwc.cfg import DB_PATH
-from mwc.logger import get_logger
-from mwc.models import Movie, init_db
-from mwc.opensubitles import OpenSubtitles
+from ..cfg import DB_PATH
+from ..logger import get_logger
+from ..models import Movie, init_db
+from .opensubtitles import OpenSubtitles
 
 logger = get_logger(__name__)
 
 
-def download_subtitles():
+@click.command()
+def download_missing_subtitles():
+    """
+    Downloads subtitles for movies in the local database that doesn't have one yet.
+    """
     init_db(DB_PATH)
     movies = Movie.select().where(Movie.opensubtittle_id.is_null())
     os_client = OpenSubtitles()
@@ -21,6 +26,3 @@ def download_subtitles():
             movie.language_id = subtitle.language
             movie.srt_file = subtitle.srt_location
             movie.save()
-
-if __name__ == '__main__':
-    download_subtitles()

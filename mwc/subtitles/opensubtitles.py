@@ -1,57 +1,24 @@
 import gzip
-import os
 from io import BytesIO, StringIO
 
 import requests
 import srt
+import json
 
-from .cfg import DEFAULT_LANGUAGE_ID, SRT_FOLDER
-from .helpers import get_headers
-from .logger import get_logger
+from ..cfg import DEFAULT_LANGUAGE_ID
+from ..helpers import get_headers
+from ..logger import get_logger
+from .subtitle import Subtitle
 
 logger = get_logger(__name__)
 
-
-class Subtitle:
-
-    def __init__(self, subtitle_id, language, srt_file):
-        self.subtitle_id = subtitle_id
-        self.srt_location = os.path.join(SRT_FOLDER, f"{self.subtitle_id}.srt")
-        self.language = language
-        self.file = srt_file
-
-    def get_lines(self):
-        lines = srt.parse(srt.make_legal_content(self.file.read()))
-        self.file.seek(0)
-        return lines
-
-    def is_valid(self):
-        try:
-            self.get_lines()
-            return True
-        except srt.SRTParseError as error:
-            if "Sorry, maximum download count for IP" in str(error):
-                logger.error("Error: reason='API limit reached'")
-                return False
-            logger.error("Error: reason='%s'", error)
-            return False
-        return True
-
-    def save_srt_file(self):
-        with open(self.srt_location, "w") as srtf:
-            srtf.write(self.file.read())
-
-    @classmethod
-    def get_from_movie(cls, movie):
-        subtitle_id = os.path.split(movie.srt_file)[-1].replace('.srt', '')
-        return cls(subtitle_id, movie.language_id, open(movie.srt_file))
 
 
 class OpenSubtitles:
 
     SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language_id}'
 
-    def download_subtitle(self, sub_download_link, encoding="ISO-8859-1"):
+    def download_subtitle(self, sub_download_link, encoding="utf-8"):
         url = sub_download_link
         response = requests.get(url)
         try:
@@ -70,7 +37,7 @@ class OpenSubtitles:
     def get_valid_subtitle(self, movie, language=DEFAULT_LANGUAGE_ID):
         try:
             all_subtitles = self.search_subtitles(movie.imdb_id, language)
-        except json.error as error:
+        except json.JSONDecodeError as error:
             # Sometimes opensubtitles do not return a JSON for some reason :/
             logger.error("Error decoding OpenSubtitle response: reason='%s'", error)
             return
@@ -98,3 +65,4 @@ class OpenSubtitles:
         logger.info("Download succeded")
 
         return subtitle
+
