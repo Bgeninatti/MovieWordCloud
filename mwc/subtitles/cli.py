@@ -11,6 +11,9 @@ logger = get_logger(__name__)
 
 @click.command()
 def download_missing_subtitles():
+    """
+    Downloads subtitles for movies in the local database that doesn't have one yet.
+    """
     init_db(DB_PATH)
     movies = Movie.select().where(Movie.opensubtittle_id.is_null())
     os_client = OpenSubtitles()

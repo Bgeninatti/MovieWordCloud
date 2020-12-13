@@ -12,6 +12,9 @@ logger = get_logger(__name__)
 
 @click.command()
 def tweet_movie():
+    """
+    Tweets a random movie stored in the local database.
+    """
     init_db(DB_PATH)
     movie = get_next_movie()
     logger.info("Selected movie: Name='%s', LanguageId='%s'",

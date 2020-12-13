@@ -12,6 +12,9 @@ logger = get_logger(__name__)
 @click.argument('ranking', type=str, default='all', required=True)
 @click.option('--save/--no-save', default=True)
 def sync_imdb(ranking, save):
+    """
+    Populates the local databse with movies from an IMDB ranking
+    """
     init_db(DB_PATH)
     imdb_client = ImdbClient()
     existing_movies = {m.imdb_id for m in Movie.select()}
