@@ -25,7 +25,7 @@ setuptools.setup(
         'requests==2.22.0',
         'peewee==3.13.1',
         'IMDbPY==6.8',
-        'lxml==4.5.0'
+        'lxml==4.6.3'
     ],
     python_requires='>=3.6',
     entry_points={
