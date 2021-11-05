@@ -32,7 +32,7 @@ def sync_imdb(ranking, save):
             new_movies.append(
                 imdb_client.get_movie(imdb_id))
     else:
-        raise ValueError("Ranking not recognized: {ranking}")
+        raise ValueError(f"Ranking not recognized: {ranking}")
 
     logger.info("New movies found: %d", len(new_movies))
     if save and new_movies:
