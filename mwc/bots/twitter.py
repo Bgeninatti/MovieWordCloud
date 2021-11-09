@@ -13,10 +13,10 @@ class TwitterClient:
         self.api = tweepy.API(auth)
 
     def tweet_image(self, filename, message):
-        return self.api.update_with_media(filename, status=message)
+        return self.api.update_status_with_media(status=message, filename=filename)
 
     def answer_tweet(self, text, tweet_id):
-        return self.api.update_status(text, tweet_id)
+        return self.api.update_status(status=text, in_reply_to_status_id=tweet_id)
 
     def tweet_wordcloud(self, movie, wc_filename):
         message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
@@ -25,4 +25,3 @@ class TwitterClient:
         self.answer_tweet(answer_tweet, image_tweet.id)
         movie.last_upload = datetime.now()
         movie.save()
-
