@@ -20,11 +20,11 @@ def sync_imdb(ranking, save):
     existing_movies = {m.imdb_id for m in Movie.select()}
 
     logger.info("Searching new movies: ranking=%s", ranking)
-    if ranking == 'top250':
+    if ranking == 'top250' or ranking == 'all':
         top250_movies = imdb_client.get_top250()
         new_movies = [m for m in top250_movies
                       if m.movieID not in existing_movies]
-    elif ranking == 'most-populars':
+    if ranking == 'most-populars' or ranking == 'all':
         most_popular_ids = imdb_client.get_most_popular_movies_ids()
         new_movies_ids = set(most_popular_ids).difference(existing_movies)
         new_movies = []
