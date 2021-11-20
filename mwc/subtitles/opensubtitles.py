@@ -3,16 +3,15 @@ from io import BytesIO, StringIO
 
 import os
 import requests
-import srt
 import json
 
-from ..cfg import DEFAULT_LANGUAGE_ID, SRT_FOLDER
+from ..cfg import load_config
 from ..helpers import get_headers
 from ..logger import get_logger
 from .subtitle import Subtitle
 
 logger = get_logger(__name__)
-
+CONFIG = load_config()
 
 
 class OpenSubtitles:
@@ -20,8 +19,8 @@ class OpenSubtitles:
     SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language_id}'
 
     def __init__(self):
-        if not os.path.exists(SRT_FOLDER):
-            os.mkdir(SRT_FOLDER)
+        if not os.path.exists(CONFIG['SRT_FOLDER']):
+            os.mkdir(CONFIG['SRT_FOLDER'])
 
     def download_subtitle(self, sub_download_link, encoding="utf-8"):
         url = sub_download_link
@@ -39,7 +38,7 @@ class OpenSubtitles:
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
 
-    def get_valid_subtitle(self, movie, language=DEFAULT_LANGUAGE_ID):
+    def get_valid_subtitle(self, movie, language=CONFIG['DEFAULT_LANGUAGE_ID']):
         try:
             all_subtitles = self.search_subtitles(movie.imdb_id, language)
         except json.JSONDecodeError as error:
@@ -70,4 +69,3 @@ class OpenSubtitles:
         logger.info("Download succeded")
 
         return subtitle
-

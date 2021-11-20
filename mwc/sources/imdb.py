@@ -1,6 +1,3 @@
-import re
-from io import StringIO
-
 import requests
 
 import imdb

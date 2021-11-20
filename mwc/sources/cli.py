@@ -1,20 +1,20 @@
 import click
 
-from ..cfg import DB_PATH
+from ..cfg import load_config
 from ..logger import get_logger
 from ..models import Movie, init_db
 from .imdb import ImdbClient
 
 logger = get_logger(__name__)
+CONFIG = load_config()
 
 
 @click.command()
-@click.option('--save/--no-save', default=True)
-def sync_imdb(save):
+def sync_imdb():
     """
     Populates the local databse with movies from an IMDB ranking
     """
-    init_db(DB_PATH)
+    init_db(CONFIG['DB_PATH'])
     imdb_client = ImdbClient()
     existing_movies = {m.imdb_id for m in Movie.select()}
 

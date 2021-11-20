@@ -15,7 +15,5 @@ WORKDIR /usr/src/app/MovieWordCloud
 COPY . .
 RUN cp mwc/cfg.py.bak mwc/cfg.py
 RUN python setup.py install
-RUN mwc sync-imdb
-RUN mwc download-missing-subtitles
 
 CMD tail -f /dev/null

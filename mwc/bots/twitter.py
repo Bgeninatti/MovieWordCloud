@@ -2,7 +2,9 @@ from datetime import datetime
 
 import tweepy
 
-from ..cfg import TWITTER_ACCOUNT_NAME
+from ..cfg import load_config
+
+CONFIG = load_config()
 
 
 class TwitterClient:
@@ -20,7 +22,7 @@ class TwitterClient:
 
     def tweet_wordcloud(self, movie, wc_filename):
         message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
-        answer_tweet = f"{TWITTER_ACCOUNT_NAME}\n\n https://www.imdb.com/title/tt{movie.imdb_id}"
+        answer_tweet = f"{CONFIG['TWITTER_ACCOUNT_NAME']}\n\n https://www.imdb.com/title/tt{movie.imdb_id}"
         image_tweet = self.tweet_image(wc_filename, message)
         self.answer_tweet(answer_tweet, image_tweet.id)
         movie.last_upload = datetime.now()
