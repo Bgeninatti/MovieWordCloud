@@ -3,9 +3,11 @@ import json
 import re
 import string
 
-from .cfg import STOP_WORDS_JSON_FILE
+from .cfg import load_config
 
-# TAG_RE = re.compile(r'(<[^>]+>).*?(</[^>]+>)')
+CONFIG = load_config()
+
+
 TAG_RE = re.compile(r'(<[^>]+>)')
 
 def tokenize_text(text):
@@ -23,7 +25,7 @@ def tokenize_text(text):
     return words
 
 def get_stop_words():
-    with open(STOP_WORDS_JSON_FILE) as json_file:
+    with open(CONFIG['STOP_WORDS_JSON_FILE']) as json_file:
         return json.loads(json_file.read())
 
 def get_headers():

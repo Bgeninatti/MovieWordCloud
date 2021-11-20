@@ -3,16 +3,17 @@ from pathlib import Path
 import srt
 
 from ..logger import get_logger
-from ..cfg import SRT_FOLDER
+from ..cfg import load_config
 
 logger = get_logger(__name__)
+CONFIG = load_config()
 
 
 class Subtitle:
 
     def __init__(self, subtitle_id, language, srt_file):
         self.subtitle_id = subtitle_id
-        self.srt_location = Path(SRT_FOLDER) / f"{self.subtitle_id}.srt"
+        self.srt_location = Path(CONFIG['SRT_FOLDER']) / f"{self.subtitle_id}.srt"
         self.language = language
         self.file = srt_file
 
@@ -31,7 +32,6 @@ class Subtitle:
                 return False
             logger.error("Error: reason='%s'", error)
             return False
-        return True
 
     def save_srt_file(self):
         with open(self.srt_location, "w") as srtf:

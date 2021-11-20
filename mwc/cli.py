@@ -1,6 +1,3 @@
-
-from datetime import datetime
-
 import click
 
 from mwc.bots.cli import tweet_movie
@@ -8,7 +5,7 @@ from mwc.sources.cli import sync_imdb
 from mwc.subtitles.cli import download_missing_subtitles
 
 
-@click.group(name='walmart')
+@click.group(name='mwc')
 @click.pass_context
 def main(ctx):
     """MovieWordCloud CLI"""
