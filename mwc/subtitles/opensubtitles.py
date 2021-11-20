@@ -1,11 +1,12 @@
 import gzip
 from io import BytesIO, StringIO
 
+import os
 import requests
 import srt
 import json
 
-from ..cfg import DEFAULT_LANGUAGE_ID
+from ..cfg import DEFAULT_LANGUAGE_ID, SRT_FOLDER
 from ..helpers import get_headers
 from ..logger import get_logger
 from .subtitle import Subtitle
@@ -17,6 +18,10 @@ logger = get_logger(__name__)
 class OpenSubtitles:
 
     SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language_id}'
+
+    def __init__(self):
+        if not os.path.exists(SRT_FOLDER):
+            os.mkdir(SRT_FOLDER)
 
     def download_subtitle(self, sub_download_link, encoding="utf-8"):
         url = sub_download_link

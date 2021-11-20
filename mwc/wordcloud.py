@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from wordcloud import WordCloud as WC
 
@@ -25,6 +26,8 @@ class WordCloud:
                         collocations=False) # Related to issue_5: Duplicated words in word cloud.
                                             # With this parameter in False we avoid repeated words.
         self.cloud.generate(self.words)
+        if not os.path.exists(PNG_FOLDER):
+            os.mkdir(PNG_FOLDER)
 
     def to_file(self):
         self.cloud.to_file(self.filename)
