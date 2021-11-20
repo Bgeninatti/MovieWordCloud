@@ -4,7 +4,6 @@ from io import StringIO
 import requests
 
 import imdb
-from lxml import etree
 
 from ..logger import get_logger
 from ..helpers import get_headers, tokenize_text
@@ -34,17 +33,6 @@ class ImdbClient:
         logger.info("Movies found in top 250: movies_count=%d", len(movies))
         return movies
 
-    def get_most_popular_movies_ids(self):
-        htmlparser = etree.HTMLParser()
-        response = requests.get(self.MOST_POPULARS_MOVIES_URL)
-        result_tree = etree.parse(StringIO(response.text), htmlparser)
-        hrefs = result_tree.xpath(self.IMDB_IDS_XPATH)
-        logger.info("Searchig most popular movies in imdb")
-        movies_ids = list(map(lambda x: re.findall(r'\d+', x).pop(), hrefs))
-        logger.info("Most popular movies found: movies_count=%d", len(movies_ids))
-
-        return movies_ids
-
     def search_movie_by_keyword(self, keyword):
         logger.info("Searchig movie: keyword=%s", keyword)
         query = tokenize_text(keyword).replace('  ', '_')
@@ -58,4 +46,3 @@ class ImdbClient:
         movie = self._client.get_movie(data['d'][0]['id'].replace('tt', ''))
         logger.info("Movie found: movie=%s", movie)
         return movie
-

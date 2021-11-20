@@ -25,7 +25,6 @@ setuptools.setup(
         'requests==2.22.0',
         'peewee==3.13.1',
         'IMDbPY==6.8',
-        'lxml==4.6.3',
         'click==8.0.3',
         'tweepy==4.3.0',
     ],
