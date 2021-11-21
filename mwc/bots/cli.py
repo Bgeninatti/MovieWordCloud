@@ -1,5 +1,8 @@
 import click
 import logging
+
+from mwc.cfg import load_config
+
 from mwc.helpers import get_stop_words
 from mwc.models import get_next_movie
 from mwc.wordcloud import WordCloud
@@ -13,7 +16,7 @@ CONFIG = load_config()
 @click.argument('srt_folder', type=str, default=CONFIG['SRT_FOLDER'])
 @click.argument('language', type=str, default=CONFIG['DEFAULT_LANGUAGE_ID'])
 @click.argument('twitter_credetials', type=dict, default=CONFIG['TWITTER_CREDENTIALS'])
-@click.argument('twitter_account_name', type=dict, default=CONFIG['TWITTER_ACCOUNT_NAME'])
+@click.argument('twitter_account_name', type=str, default=CONFIG['TWITTER_ACCOUNT_NAME'])
 def tweet_movie(srt_folder, language, twitter_credetials, twitter_account_name):
     """
     Tweets a random movie stored in the local database.
