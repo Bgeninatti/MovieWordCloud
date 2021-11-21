@@ -3,9 +3,9 @@ import datetime
 from peewee import (CharField, DateTimeField, IntegerField, Model,
                     SqliteDatabase, fn)
 
-from .logger import get_logger
+import logging
 
-logger = get_logger(__name__)
+log = logging.getLogger(__name__)
 database = SqliteDatabase(None)
 
 
@@ -24,6 +24,7 @@ class Movie(BaseModel):
     srt_file = CharField(null=True)
     last_upload = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
+#FIXME:Mover a un manager, o a una clase que maneje las querys. Ordenar las querys.
 
 def init_db(db_path):
     database.init(db_path)
@@ -56,19 +57,19 @@ def get_next_movie(imdb_id=None):
 
 def get_or_create_by_imdb_movie(imdb_movie):
     movie = Movie.select().where(Movie.imdb_id == imdb_movie.movieID).first()
-    logger.info("Searching IMDB movie in database: name='%s', imdb_id=%s",
+    log.info("Searching IMDB movie in database: name='%s', imdb_id=%s",
                 imdb_movie, imdb_movie.movieID)
     if movie:
-        logger.info("IMDB movie found in database: name='%s', imdb_id=%s",
+        log.info("IMDB movie found in database: name='%s', imdb_id=%s",
                     imdb_movie, imdb_movie.movieID)
         return movie
 
     year = imdb_movie.data.get('year')
     if not year:
-        logger.error("Error adding movie to database: reason='%s', name='%s', imdb_id=%s",
+        log.error("Error adding movie to database: reason='%s', name='%s', imdb_id=%s",
                      "Couldn't find the year in IMDB", imdb_movie, imdb_movie.movieID)
         return
-    logger.info("Adding movie to database: name='%s', imdb_id=%s",
+    log.info("Adding movie to database: name='%s', imdb_id=%s",
                 imdb_movie, imdb_movie.movieID)
     return Movie.create(
         name=imdb_movie,

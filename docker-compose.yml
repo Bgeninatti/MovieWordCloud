@@ -1,0 +1,10 @@
+version: '3'
+services:
+  mwc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mwc
+    volumes:
+      - .:/usr/src/app/MovieWordCloud
+    env_file: configuration.env
