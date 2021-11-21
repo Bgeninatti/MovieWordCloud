@@ -106,6 +106,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+venv-mwc/
 ENV/
 env.bak/
 venv.bak/
@@ -138,3 +139,7 @@ subtittles/
 subtittles/
 movies.sqlite
 .idea/
+
+
+# logs
+logs.log

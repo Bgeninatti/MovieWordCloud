@@ -1,9 +1,7 @@
 import click
 
-
 import logging
-from mwc.models import Movie
-
+from mwc.models import Movie, init_db
 from .imdb import ImdbClient
 
 log = logging.getLogger(__name__)
@@ -14,6 +12,7 @@ def sync_imdb():
     """
     Populates the local databse with movies from an IMDB ranking
     """
+    init_db(CONFIG['DB_PATH'])
     imdb_client = ImdbClient()
     existing_movies = {m.imdb_id for m in Movie.select()}
 
