@@ -1,6 +1,7 @@
 from pathlib import Path
 
-import srt,logging
+import srt
+import logging
 
 log = logging.getLogger(__name__)
 
