@@ -10,6 +10,7 @@ A Twitter bot that tweets word clouds based on movies scripts.
 ```
 $ git clone https://github.com/Bgeninatti/MovieWordCloud.git
 ```
+
 2. Up the docker container
 
 ```

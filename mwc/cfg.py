@@ -1,5 +1,5 @@
-import os
 
+import os
 
 def load_config():
     config = {
@@ -17,4 +17,5 @@ def load_config():
         'TWITTER_ACCOUNT_NAME': os.environ['TWITTER_ACCOUNT_NAME'],
         'TMDB_API_KEY': os.environ['TMDB_API_KEY']
     }
+
     return config

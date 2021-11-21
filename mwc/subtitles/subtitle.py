@@ -1,11 +1,10 @@
 from pathlib import Path
 
-import srt
+import srt,logging
 
-from mwc.logger import get_logger
 from mwc.cfg import load_config
 
-logger = get_logger(__name__)
+log = logging.getLogger(__name__)
 CONFIG = load_config()
 
 
@@ -28,7 +27,7 @@ class Subtitle:
             return True
         except srt.SRTParseError as error:
             if "Sorry, maximum download count for IP" in str(error):
-                logger.error("Error: reason='API limit reached'")
+                log.error("Error: reason='API limit reached'")
                 return False
             logger.error("Error: reason='%s'", error)
             return False

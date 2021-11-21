@@ -1,14 +1,12 @@
 import click
-
-from mwc.cfg import load_config
+import logging
 from mwc.helpers import get_stop_words
-from mwc.logger import get_logger
+
 from mwc.models import get_next_movie, init_db
 from mwc.wordcloud import WordCloud
 from .twitter import TwitterClient
 
-logger = get_logger(__name__)
-CONFIG = load_config()
+log = logging.getLogger(__name__)
 
 
 @click.command()
@@ -18,7 +16,7 @@ def tweet_movie():
     """
     init_db(CONFIG['DB_PATH'])
     movie = get_next_movie()
-    logger.info("Selected movie: Name='%s', LanguageId='%s'",
+    log.info("Selected movie: Name='%s', LanguageId='%s'",
                 movie.name, CONFIG['DEFAULT_LANGUAGE_ID'])
     stop_words = get_stop_words()
     wc = WordCloud(movie, stop_words)

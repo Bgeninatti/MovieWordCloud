@@ -1,16 +1,15 @@
 import gzip
 from io import BytesIO, StringIO
 
-import os
-import requests
-import json
+import os, requests,json,logging
+
 
 from mwc.cfg import load_config
 from mwc.helpers import get_headers
-from mwc.logger import get_logger
+
 from .subtitle import Subtitle
 
-logger = get_logger(__name__)
+log = logging.getLogger(__name__)
 CONFIG = load_config()
 
 
@@ -43,10 +42,10 @@ class OpenSubtitles:
             all_subtitles = self.search_subtitles(movie.imdb_id, language)
         except json.JSONDecodeError as error:
             # Sometimes opensubtitles do not return a JSON for some reason :/
-            logger.error("Error decoding OpenSubtitle response: reason='%s'", error)
+            log.error("Error decoding OpenSubtitle response: reason='%s'", error)
             return
 
-        logger.info(
+        log.info(
             "Subtitles found: imdb_id=%s, subtitles_count=%d",
             movie.imdb_id, len(all_subtitles)
         )
@@ -56,7 +55,7 @@ class OpenSubtitles:
             try:
                 srt_file = self.download_subtitle(sub['SubDownloadLink'], "utf-8")
             except (UnicodeEncodeError, UnicodeDecodeError) as error:
-                logger.error("Error: reason='%s'", error)
+                log.error("Error: reason='%s'", error)
                 continue
             subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file)
             if subtitle.is_valid():
@@ -64,8 +63,8 @@ class OpenSubtitles:
                 break
 
         if not subtitle:
-            logger.error("Error: reason='No valid subtitle found'")
+            log.error("Error: reason='No valid subtitle found'")
             return
-        logger.info("Download succeded")
+        log.info("Download succeded")
 
         return subtitle
