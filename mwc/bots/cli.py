@@ -3,7 +3,7 @@ import click
 from mwc.cfg import load_config
 from mwc.helpers import get_stop_words
 from mwc.logger import get_logger
-from mwc.models import get_next_movie, init_db
+from mwc.models import get_next_movie
 from mwc.wordcloud import WordCloud
 from .twitter import TwitterClient
 
@@ -16,7 +16,6 @@ def tweet_movie():
     """
     Tweets a random movie stored in the local database.
     """
-    init_db(CONFIG['DB_PATH'])
     movie = get_next_movie()
     logger.info("Selected movie: Name='%s', LanguageId='%s'",
                 movie.name, CONFIG['DEFAULT_LANGUAGE_ID'])

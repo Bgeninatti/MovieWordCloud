@@ -2,7 +2,7 @@ import click
 
 from mwc.cfg import load_config
 from mwc.logger import get_logger
-from mwc.models import Movie, init_db
+from mwc.models import Movie
 from .imdb import ImdbClient
 
 logger = get_logger(__name__) #FIXME: Usar el modulo loggin en lugar de get logger
@@ -14,7 +14,6 @@ def sync_imdb():
     """
     Populates the local databse with movies from an IMDB ranking
     """
-    init_db(CONFIG['DB_PATH'])
     imdb_client = ImdbClient()
     existing_movies = {m.imdb_id for m in Movie.select()}
 

@@ -8,7 +8,7 @@ from mwc.subtitles.cli import download_missing_subtitles
 @click.group(name='mwc')
 @click.pass_context
 def main(ctx):
-    #TODO: Inicializar la db aca y no en cada comando
+    init_db(CONFIG['DB_PATH'])
     """MovieWordCloud CLI"""
     ctx.ensure_object(dict)
 
