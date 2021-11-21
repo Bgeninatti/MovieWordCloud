@@ -1,5 +1,7 @@
 import click
 
+from mwc.wordcloud import CONFIG
+from mwc.modules import init_db
 from mwc.bots.cli import tweet_movie
 from mwc.sources.cli import sync_imdb
 from mwc.subtitles.cli import download_missing_subtitles
