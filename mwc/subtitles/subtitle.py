@@ -34,6 +34,6 @@ class Subtitle:
             srtf.write(self.file.read())
 
     @classmethod
-    def get_from_movie(cls, movie):
+    def get_from_movie(cls, movie, srt_folder):
         subtitle_id = movie.srt_file.split('/')[-1].replace('.srt', '')
-        return cls(subtitle_id, movie.language_id, open(movie.srt_file))
+        return cls(subtitle_id, movie.language_id, open(movie.srt_file), srt_folder)
