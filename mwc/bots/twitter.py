@@ -2,7 +2,7 @@ from datetime import datetime
 
 import tweepy
 
-from ..cfg import load_config
+from mwc.cfg import load_config
 
 CONFIG = load_config()
 

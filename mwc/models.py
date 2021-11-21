@@ -24,6 +24,7 @@ class Movie(BaseModel):
     srt_file = CharField(null=True)
     last_upload = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
+#FIXME:Mover a un manager, o a una clase que maneje las querys. Ordenar las querys.
 
 def init_db(db_path):
     database.init(db_path)

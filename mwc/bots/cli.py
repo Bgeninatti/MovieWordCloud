@@ -1,10 +1,10 @@
 import click
 
-from ..cfg import load_config
-from ..helpers import get_stop_words
-from ..logger import get_logger
-from ..models import get_next_movie, init_db
-from ..wordcloud import WordCloud
+from mwc.cfg import load_config
+from mwc.helpers import get_stop_words
+from mwc.logger import get_logger
+from mwc.models import get_next_movie, init_db
+from mwc.wordcloud import WordCloud
 from .twitter import TwitterClient
 
 logger = get_logger(__name__)
