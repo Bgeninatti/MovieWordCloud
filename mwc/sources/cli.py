@@ -1,11 +1,11 @@
 import click
 
-from ..cfg import load_config
-from ..logger import get_logger
-from ..models import Movie, init_db
+from mwc.cfg import load_config
+from mwc.logger import get_logger
+from mwc.models import Movie, init_db
 from .imdb import ImdbClient
 
-logger = get_logger(__name__)
+logger = get_logger(__name__) #FIXME: Usar el modulo loggin en lugar de get logger
 CONFIG = load_config()
 
 

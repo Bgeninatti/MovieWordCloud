@@ -2,8 +2,8 @@ import requests
 
 import imdb
 
-from ..logger import get_logger
-from ..helpers import get_headers, tokenize_text
+from mwc.logger import get_logger
+from mwc.helpers import get_headers, tokenize_text
 
 
 logger = get_logger(__name__)

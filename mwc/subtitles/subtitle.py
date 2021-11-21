@@ -2,8 +2,8 @@ from pathlib import Path
 
 import srt
 
-from ..logger import get_logger
-from ..cfg import load_config
+from mwc.logger import get_logger
+from mwc.cfg import load_config
 
 logger = get_logger(__name__)
 CONFIG = load_config()

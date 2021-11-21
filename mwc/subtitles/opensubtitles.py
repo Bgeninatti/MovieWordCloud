@@ -5,9 +5,9 @@ import os
 import requests
 import json
 
-from ..cfg import load_config
-from ..helpers import get_headers
-from ..logger import get_logger
+from mwc.cfg import load_config
+from mwc.helpers import get_headers
+from mwc.logger import get_logger
 from .subtitle import Subtitle
 
 logger = get_logger(__name__)
