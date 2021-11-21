@@ -12,10 +12,10 @@ CONFIG = load_config()
 
 class WordCloud:
 
-    def __init__(self, movie, stop_words):
+    def __init__(self, movie, stop_words, srt_folder):
         self.movie = movie
         self.stop_words = stop_words
-        self.subtitle = Subtitle.get_from_movie(movie)
+        self.subtitle = Subtitle.get_from_movie(movie, srt_folder)
         lines = [l.content for l in self.subtitle.get_lines()]
         self.words = tokenize_text(' '.join(lines))
         self.wordcloud_title = f"{self.movie.name} ({self.movie.year})"

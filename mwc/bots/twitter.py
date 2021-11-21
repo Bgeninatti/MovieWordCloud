@@ -2,10 +2,6 @@ from datetime import datetime
 
 import tweepy
 
-from mwc.cfg import load_config
-
-CONFIG = load_config()
-
 
 class TwitterClient:
 
@@ -20,9 +16,9 @@ class TwitterClient:
     def answer_tweet(self, text, tweet_id):
         return self.api.update_status(status=text, in_reply_to_status_id=tweet_id)
 
-    def tweet_wordcloud(self, movie, wc_filename):
+    def tweet_wordcloud(self, movie, wc_filename, twitter_account_name):
         message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
-        answer_tweet = f"{CONFIG['TWITTER_ACCOUNT_NAME']}\n\n https://www.imdb.com/title/tt{movie.imdb_id}"
+        answer_tweet = f"{twitter_account_name}\n\n https://www.imdb.com/title/tt{movie.imdb_id}"
         image_tweet = self.tweet_image(wc_filename, message)
         self.answer_tweet(answer_tweet, image_tweet.id)
         movie.last_upload = datetime.now()

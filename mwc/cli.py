@@ -1,14 +1,14 @@
 import click
 
-from mwc.wordcloud import CONFIG
-from mwc.modules import init_db
+from mwc.cfg import load_config
+from mwc.models import init_db
 from mwc.logger import config_logger
 import logging
 from mwc.bots.cli import tweet_movie
 from mwc.sources.cli import sync_imdb
 from mwc.subtitles.cli import download_missing_subtitles
 
-
+CONFIG = load_config()
 log = logging.getLogger(__name__)
 
 
