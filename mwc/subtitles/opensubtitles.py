@@ -1,25 +1,27 @@
 import gzip
 from io import BytesIO, StringIO
 
-import os, requests,json,logging
+import os
+import requests
+import json
+import logging
 
 
-from mwc.cfg import load_config
 from mwc.helpers import get_headers
 
 from .subtitle import Subtitle
 
 log = logging.getLogger(__name__)
-CONFIG = load_config()
 
 
 class OpenSubtitles:
 
-    SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language_id}'
+    SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language}'
 
-    def __init__(self):
-        if not os.path.exists(CONFIG['SRT_FOLDER']):
-            os.mkdir(CONFIG['SRT_FOLDER'])
+    def __init__(self, folder_str, language):
+        self.language = language
+        if not os.path.exists(folder_str):
+            os.mkdir(folder_str)
 
     def download_subtitle(self, sub_download_link, encoding="utf-8"):
         url = sub_download_link
@@ -30,16 +32,16 @@ class OpenSubtitles:
         except OSError:
             return StringIO(response.content.decode(encoding))
 
-    def search_subtitles(self, imdb_id, language_id):
-        url = self.SEARCH_BY_IMDB_URL.format(imdb_id=imdb_id, language_id=language_id)
+    def search_subtitles(self, imdb_id):
+        url = self.SEARCH_BY_IMDB_URL.format(imdb_id=imdb_id, language=self.language)
         headers = get_headers()
         response = requests.get(url, headers=headers)
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
 
-    def get_valid_subtitle(self, movie, language=CONFIG['DEFAULT_LANGUAGE_ID']):
+    def get_valid_subtitle(self, movie, folder_str):
         try:
-            all_subtitles = self.search_subtitles(movie.imdb_id, language)
+            all_subtitles = self.search_subtitles(movie.imdb_id)
         except json.JSONDecodeError as error:
             # Sometimes opensubtitles do not return a JSON for some reason :/
             log.error("Error decoding OpenSubtitle response: reason='%s'", error)
@@ -57,7 +59,7 @@ class OpenSubtitles:
             except (UnicodeEncodeError, UnicodeDecodeError) as error:
                 log.error("Error: reason='%s'", error)
                 continue
-            subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file)
+            subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file, folder_str)
             if subtitle.is_valid():
                 subtitle.save_srt_file()
                 break

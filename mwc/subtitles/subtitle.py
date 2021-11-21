@@ -2,17 +2,14 @@ from pathlib import Path
 
 import srt,logging
 
-from mwc.cfg import load_config
-
 log = logging.getLogger(__name__)
-CONFIG = load_config()
 
 
 class Subtitle:
 
-    def __init__(self, subtitle_id, language, srt_file):
+    def __init__(self, subtitle_id, language, srt_file, srt_folder:str):
         self.subtitle_id = subtitle_id
-        self.srt_location = Path(CONFIG['SRT_FOLDER']) / f"{self.subtitle_id}.srt"
+        self.srt_location = Path(srt_folder) / f"{self.subtitle_id}.srt"
         self.language = language
         self.file = srt_file
 
