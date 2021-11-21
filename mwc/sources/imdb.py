@@ -4,6 +4,7 @@ import imdb
 
 import logging
 from mwc.helpers import get_headers, tokenize_text
+from mwc.models import Movie
 
 
 log = logging.getLogger(__name__)
@@ -18,18 +19,32 @@ class ImdbClient:
     def __init__(self):
         self._client = imdb.IMDb()
 
-    def get_movie(self, imdb_id):
+    def get_movie(self, imdb_id: int) -> Movie:
+        """Get the movie from the DB
+
+        Args:
+            imdb_id (int): id from the DB
+
+        Returns:
+            Movie: Instance of the model
+        """
         log.debug("Downloading movie: imdb_id=%s", imdb_id)
         movie = self._client.get_movie(imdb_id)
         return movie
 
     def get_top250(self):
+        """Get the top 250 movies from the DB
+
+        Returns:
+            Query: grup with the 250 movies
+        """
         log.info("Searchig top 250 movies in imdb")
         movies = self._client.get_top250_movies()
         log.info("Movies found in top 250: movies_count=%d", len(movies))
         return movies
 
-    def search_movie_by_keyword(self, keyword):
+    def search_movie_by_keyword(self, keyword: str):
+        """DEPRECATED"""
         log.info("Searchig movie: keyword=%s", keyword)
         query = tokenize_text(keyword).replace('  ', '_')
         first_letter = query[0]
