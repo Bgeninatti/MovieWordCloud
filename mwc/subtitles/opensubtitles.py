@@ -2,9 +2,11 @@ import gzip
 from io import BytesIO, StringIO
 
 import os
+from typing import Dict, List
 import requests
 import json
 import logging
+from mwc.models import Movie
 
 
 from mwc.helpers import get_headers
@@ -18,12 +20,27 @@ class OpenSubtitles:
 
     SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language}'
 
-    def __init__(self, srt_folder, language):
+    def __init__(self, srt_folder: str, language: str):
+        """Check if the srt folder exist and create it
+
+        Args:
+            srt_folder (str): folder name without path 
+            language (str): language ej 'eng'
+        """
         self.language = language
         if not os.path.exists(srt_folder):
             os.mkdir(srt_folder)
 
-    def download_subtitle(self, sub_download_link, encoding="utf-8"):
+    def download_subtitle(self, sub_download_link: str, encoding="utf-8") -> StringIO:
+        """Download, extract and read the subtitle.
+
+        Args:
+            sub_download_link (str): 'https://dl.opensubtitles.org/en/download/src-api/...'
+            encoding (str, optional): Defaults to "utf-8".
+
+        Returns:
+            StringIO: with the subtitle 
+        """
         url = sub_download_link
         response = requests.get(url)
         try:
@@ -32,14 +49,35 @@ class OpenSubtitles:
         except OSError:
             return StringIO(response.content.decode(encoding))
 
-    def search_subtitles(self, imdb_id):
+    def search_subtitles(self, imdb_id: int) -> List[Dict]:
+        """Search subtitles based on a imdb_id to return
+        a list of subtitles sorted by score.
+
+        Args:
+            imdb_id (int): Id from the movie form IMDB
+
+        Returns:
+            List[Dict]: List of dictionaries that represent each
+            subtitle, sorted by score
+        """
         url = self.SEARCH_BY_IMDB_URL.format(imdb_id=imdb_id, language=self.language)
         headers = get_headers()
         response = requests.get(url, headers=headers)
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
 
-    def get_valid_subtitle(self, movie, srt_folder):
+    def get_valid_subtitle(self, movie: Movie, srt_folder: str) -> Subtitle:
+        """From a IMDB movie search teh subtitles on opensubtitle.
+        Get the best rakend subtitle and return a Subtitle instance
+        for the DB.
+
+        Args:
+            movie (Movie): model that represent a IMDB movie
+            srt_folder (str): path of the movies folder TODO: Get absolute payh
+
+        Returns:
+            Subtitle: Subtitle model instance
+        """
         try:
             all_subtitles = self.search_subtitles(movie.imdb_id)
         except json.JSONDecodeError as error:
