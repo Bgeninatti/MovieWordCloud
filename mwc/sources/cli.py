@@ -1,20 +1,10 @@
 import click
-
-<<<<<<< HEAD
-
 import logging
-=======
-from mwc.logger import get_logger
->>>>>>> c41666c (refactor str configurations)
 from mwc.models import Movie
 
 from .imdb import ImdbClient
 
-<<<<<<< HEAD
 log = logging.getLogger(__name__)
-=======
-logger = get_logger(__name__) #FIXME: Usar el modulo loggin en lugar de get logger
->>>>>>> c41666c (refactor str configurations)
 
 
 @click.command()
