@@ -28,7 +28,7 @@ class TwitterClient:
             message (str): message to publish in the twitt
 
         Returns:
-            tweepy.models.Status: Status object, simil response, with the information that 
+            tweepy.models.Status: Status object, simil response, with the information that
             twitter the API returns.
         """
         return self.api.update_status_with_media(status=message, filename=filename)
@@ -41,7 +41,7 @@ class TwitterClient:
             tweet_id (int): id of the twitt
 
         Returns:
-            tweepy.models.Status: Status: Status object, simil response, with the information that 
+            tweepy.models.Status: Status: Status object, simil response, with the information that
             twitter the API returns.
         """
         return self.api.update_status(status=text, in_reply_to_status_id=tweet_id)
