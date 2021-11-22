@@ -27,8 +27,6 @@ setuptools.setup(
         'IMDbPY==6.8',
         'click==8.0.3',
         'tweepy==4.3.0',
-        'ipdb==0.13.9',
-        'flake8==4.0.1',
     ],
     python_requires='>=3.6',
     entry_points={
