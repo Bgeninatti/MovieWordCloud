@@ -22,3 +22,5 @@ srt==3.0.0
 tweepy==4.3.0
 urllib3==1.25.11
 wordcloud==1.8.1
+ipdb==0.13.9
+flake8==4.0.1

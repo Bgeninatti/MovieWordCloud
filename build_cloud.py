@@ -13,8 +13,8 @@ from mwc.wordcloud import WordCloud
 log = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(
-    description="Search a movie in IMDB based on the provided keyword. Search the subtitle in OpenSubtitles, generates the " + \
-                "wordcloud witouth tweeting the result")
+    description="Search a movie in IMDB based on the provided keyword. Search the subtitle in " + \
+    "OpenSubtitles, generates the wordcloud witouth tweeting the result")
 parser.add_argument('-q', '--query', dest="query", required=True,
                     help='Query to search the movie')
 
@@ -41,6 +41,7 @@ def search_and_build(query):
     stop_words = get_stop_words()
     wc = WordCloud(movie, stop_words)
     wc.to_file()
+
 
 if __name__ == '__main__':
     args = vars(parser.parse_args())

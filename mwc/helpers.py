@@ -10,6 +10,7 @@ CONFIG = load_config()
 
 TAG_RE = re.compile(r'(<[^>]+>)')
 
+
 def tokenize_text(text):
     # Find and remove all html like tags <i>, <font>, etc
     tags = set(TAG_RE.findall(text))
@@ -24,9 +25,11 @@ def tokenize_text(text):
     words = ' '.join([w for w in words.split(' ') if len(w) > 2])
     return words
 
+
 def get_stop_words():
     with open(CONFIG['STOP_WORDS_JSON_FILE']) as json_file:
         return json.loads(json_file.read())
+
 
 def get_headers():
     return {'User-agent': 'TemporaryUserAgent v1.2'}
