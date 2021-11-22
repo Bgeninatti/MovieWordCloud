@@ -1,7 +1,6 @@
 
 import os
 
-
 def load_config():
     config = {
         'SRT_FOLDER': os.environ['SRT_FOLDER'],

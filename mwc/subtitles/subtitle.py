@@ -1,14 +1,13 @@
 from pathlib import Path
 
-import srt
-import logging
+import srt,logging
 
 log = logging.getLogger(__name__)
 
 
 class Subtitle:
 
-    def __init__(self, subtitle_id, language, srt_file, srt_folder: str):
+    def __init__(self, subtitle_id, language, srt_file, srt_folder:str):
         self.subtitle_id = subtitle_id
         self.srt_location = Path(srt_folder) / f"{self.subtitle_id}.srt"
         self.language = language
@@ -27,7 +26,7 @@ class Subtitle:
             if "Sorry, maximum download count for IP" in str(error):
                 log.error("Error: reason='API limit reached'")
                 return False
-            log.error("Error: reason='%s'", error)
+            logger.error("Error: reason='%s'", error)
             return False
 
     def save_srt_file(self):
