@@ -2,12 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 
 # Este es el parametro a buscar
-busqueda = 'Argentina'
+busqueda = 'El secreto de sus ojos'
 
 
 resp_buscar = requests.get('https://www.subdivx.com/index.php?buscar={}&accion=5&masdesc=&subtitulos=1&realiza_b=1'.format(busqueda))
 cookies = resp_buscar.cookies
-soup = BeautifulSoup(resp.text, 'html.parser')
+soup = BeautifulSoup(resp_buscar.text, 'html.parser')
 
 titulos = soup.find_all(id='menu_detalle_buscador')
 detalles = soup.find_all(id='buscador_detalle')
@@ -40,7 +40,7 @@ soup = BeautifulSoup(resp_intermedia.text, 'html.parser')
 link_srt = soup.find('a', href=lambda v: v and v.startswith("bajar.php")).get('href')
 
 
-import rarfile
+import rarfile, io
 
 # Descargo el RAR, en la variable «z»
 
@@ -64,9 +64,22 @@ z.extract(srt_filename)
 # proceso el srt...
 import srt
 
-with open(srt_filename, 'r', encoding='latin-1') as srt_file:
-    text = "".join(srt_file.readlines())
-    subs = list(srt.parse(text))
+# esta funcion es util porque los archivos estan subidos con
+# con cualquier encoding
+def decode_srt(filename, encoding='utf-8', retry=True):
+    with open(filename, 'r', encoding=encoding) as srt_file:
+        text = "".join(srt_file.readlines())
+        try: 
+            subs = list(srt.parse(text))
+        except srt.SRTParseError:
+            if retry:
+                if encoding != 'latin-1':
+                    subs = decode_srt(filename, 'latin-1')
+                else:
+                    subs = decode_srt(filename, 'ISO-8859-15', False)
+    return subs
 
+# anda.
+subs = decode_srt(srt_filename)
 todos_los_dialogos = "".join([sub.content for sub in subs])
 
