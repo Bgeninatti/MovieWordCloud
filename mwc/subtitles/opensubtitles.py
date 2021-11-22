@@ -24,7 +24,7 @@ class OpenSubtitles:
         """Check if the srt folder exist and create it
 
         Args:
-            srt_folder (str): folder name without path 
+            srt_folder (str): folder name without path
             language (str): language ej 'eng'
         """
         self.language = language
@@ -39,7 +39,7 @@ class OpenSubtitles:
             encoding (str, optional): Defaults to "utf-8".
 
         Returns:
-            StringIO: with the subtitle 
+            StringIO: with the subtitle
         """
         url = sub_download_link
         response = requests.get(url)
