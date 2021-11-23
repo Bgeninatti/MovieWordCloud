@@ -4,7 +4,7 @@ import requests
 from mwc.models import Movie
 
 
-class TMDB:
+class TmdbClient:
 
     _BASE_URL = 'https://api.themoviedb.org/3'
     _GET_DETAILS_URI = '/movie/{movie_id}?api_key={api_key}'

@@ -37,4 +37,4 @@ class Subtitle:
     @classmethod
     def get_from_movie(cls, movie, srt_folder):
         subtitle_id = movie.srt_file.split('/')[-1].replace('.srt', '')
-        return cls(subtitle_id, movie.language_id, open(movie.srt_file), srt_folder)
+        return cls(subtitle_id, movie.original_language, open(movie.srt_file), srt_folder)
