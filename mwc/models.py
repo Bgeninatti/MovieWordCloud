@@ -47,7 +47,6 @@ def get_all_movies_with_subtitles():
 
 
 def get_next_movie(imdb_id=None):
-    import pdb; pdb.set_trace()
     if imdb_id:
         movie = Movie.select().where(Movie.imdb_id == imdb_id).first()
         return movie
