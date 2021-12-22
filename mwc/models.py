@@ -1,7 +1,7 @@
 import datetime
 
 from peewee import (CharField, DateTimeField, IntegerField, Model,
-                    SqliteDatabase, fn)
+                    SqliteDatabase, fn, DateField)
 
 import logging
 
@@ -16,15 +16,22 @@ class BaseModel(Model):
 
 
 class Movie(BaseModel):
-    name = CharField()
-    year = IntegerField()
-    imdb_id = CharField(primary_key=True)
+    budget = IntegerField()
+    tmdb_id = IntegerField()
+    imdb_id = CharField()
+    original_language = CharField()
+    original_title = CharField()
+    popularity = IntegerField()
+    poster_path = CharField()
+    release_date = DateField()
+    revenue = IntegerField()
+    runtime = IntegerField()
     opensubtittle_id = CharField(null=True)
-    language_id = CharField(null=True)
     srt_file = CharField(null=True)
     last_upload = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
 # FIXME:Mover a un manager, o a una clase que maneje las querys. Ordenar las querys.
+
 
 
 def init_db(db_path):
@@ -53,9 +60,9 @@ def get_next_movie(imdb_id=None):
 
     movie = Movie.select() \
         .where(Movie.opensubtittle_id.is_null(False)) \
-        .order_by(Movie.last_upload.asc())[:10] \
+        .order_by(Movie.last_upload.asc()) \
         .order_by(fn.Random()) \
-        .first
+        .first()
     return movie
 
 

@@ -26,6 +26,5 @@ def download_missing_subtitles(srt_folder, language):
         subtitle = os_client.get_valid_subtitle(movie, srt_folder)
         if subtitle:
             movie.opensubtittle_id = subtitle.subtitle_id
-            movie.language_id = subtitle.language
             movie.srt_file = subtitle.srt_location
             movie.save()

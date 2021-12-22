@@ -54,8 +54,8 @@ class TwitterClient:
             wc_filename (str): filepath + file name .png TODO: pass the absolute path
             twitter_account_name (str): Twitter account name '@twitter_account_name'
         """
-        message = f"{movie.name} ({movie.year})\n\n#MovieWordCloud"
-        answer_tweet = f"{twitter_account_name}\n\n https://www.imdb.com/title/tt{movie.imdb_id}"
+        message = f"{movie.original_title} ({movie.release_date})\n\n#MovieWordCloud"
+        answer_tweet = f"{twitter_account_name}\n\n https://www.themoviedb.org/movie/{movie.tmdb_id}"
         image_tweet = self.tweet_image(wc_filename, message)
         self.answer_tweet(answer_tweet, image_tweet.id)
         movie.last_upload = datetime.now()
