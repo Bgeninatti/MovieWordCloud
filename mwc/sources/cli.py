@@ -28,4 +28,7 @@ def sync_tmdb(api_key):
 
     for tmdb_id in new_movies:
         movie = tmdb_client.get_movie(tmdb_id)
+        if not movie:
+            log.warning("No IMDB Id found for movie: tmdb_id=%s", tmdb_id)
+            continue
         movie.save()
