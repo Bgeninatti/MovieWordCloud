@@ -37,8 +37,9 @@ class TmdbClient:
             runtime=data['runtime'],
         )
 
-    def get_most_popular(self, page=1):
-        uri = self._GET_MOST_POPULAR_URI.format(api_key=self._api_key, page=page)
-        data = self._get(uri)
-        for movie in data['results']:
-            yield movie['id']
+    def get_most_popular(self, pages: int = 1):
+        for page in range(1, pages + 1):
+            uri = self._GET_MOST_POPULAR_URI.format(api_key=self._api_key, page=page)
+            data = self._get(uri)
+            for movie in data['results']:
+                yield movie['id']
