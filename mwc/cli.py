@@ -5,7 +5,6 @@ from mwc.models import init_db
 from mwc.logger import config_logger
 import logging
 from mwc.bots.cli import tweet_movie
-from mwc.sources.cli import sync_imdb
 from mwc.sources.cli import sync_tmdb
 from mwc.subtitles.cli import download_missing_subtitles
 
@@ -23,7 +22,6 @@ def main(ctx):
     log.info("Init the main application")
 
 
-main.add_command(sync_imdb)
 main.add_command(sync_tmdb)
 main.add_command(download_missing_subtitles)
 main.add_command(tweet_movie)
