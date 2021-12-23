@@ -3,7 +3,7 @@ import click
 import logging
 
 from mwc.cfg import load_config
-from mwc.models import Movie
+from mwc.db.models import Movie
 
 from .opensubtitles import OpenSubtitles
 

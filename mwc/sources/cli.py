@@ -1,6 +1,6 @@
 import click
 import logging
-from mwc.models import Movie
+from mwc.db.models import Movie
 
 from mwc.cfg import load_config
 
