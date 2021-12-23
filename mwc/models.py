@@ -1,12 +1,11 @@
 import datetime
 
-from peewee import (CharField, DateTimeField, IntegerField, Model,
-                    SqliteDatabase, fn, DateField)
+from peewee import (CharField, DateTimeField, IntegerField, Model, fn, DateField, PostgresqlDatabase)
 
 import logging
 
 log = logging.getLogger(__name__)
-database = SqliteDatabase(None)
+database = PostgresqlDatabase(None)
 
 
 class BaseModel(Model):
@@ -33,9 +32,8 @@ class Movie(BaseModel):
 # FIXME:Mover a un manager, o a una clase que maneje las querys. Ordenar las querys.
 
 
-
-def init_db(db_path):
-    database.init(db_path)
+def init_db(db_name, user, password, host, port):
+    database.init(database=db_name, user=user, password=password, host=host, port=port)
     database.connect()
     database.create_tables([Movie, ])
     return database
