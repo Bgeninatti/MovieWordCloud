@@ -20,7 +20,7 @@ def sync_tmdb(api_key):
     existing_movies = {m.tmdb_id for m in Movie.select()}
 
     log.info("Searching most popular movies")
-    popular_movies = tmdb_client.get_most_popular()
+    popular_movies = tmdb_client.get_most_popular(pages=CONFIG['FETCH_RANKING_PAGES'])
     new_movies = [tmdb_id for tmdb_id in popular_movies
                   if tmdb_id not in existing_movies]
 
