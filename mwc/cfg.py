@@ -10,6 +10,7 @@ def load_config():
         'PNG_FOLDER': clean_setting('PNG_FOLDER'),
         'DEFAULT_LANGUAGE_ID': clean_setting('DEFAULT_LANGUAGE_ID'),
         'STOP_WORDS_JSON_FILE': clean_setting('STOP_WORDS_JSON_FILE'),
+        'FETCH_RANKING_PAGES': int(clean_setting('FETCH_RANKING_PAGES')),
         'DB': {
             'db_name': params.path[1:],
             'user': params.username,
