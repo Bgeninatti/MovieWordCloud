@@ -11,35 +11,33 @@ A Twitter bot that tweets word clouds based on movies scripts.
 $ git clone https://github.com/Bgeninatti/MovieWordCloud.git
 ```
 
-2. Up the docker container
+2. Fill your database, TMDB and twitter credentials in the `auth.env` file:
+
+3. Run the docker container
 
 ```
-docker-compose up
+docker compose up -d
 ```
 
-3. Copy the the `mwc/cfg.py.bak` to `mwc/cfg.py` and fill the config values.
+The command will hang forever. This means the container is running and waiting for commands.
+
+The following commands needs to be ran in a separated shell
 
 
-4. Install the `mwc` package
-
-```
-$ python setup.py install
-```
-
-5. Download movies data from IMDB
+4. Download movies data
 
 ```
-$ mwc sync-imdb
+$ docker compose exec mwc mwc sync-tmdb
 ```
 
 6. Download subtitles for the movies
 
 ```
-$ mwc download-missing-subtitles
+$ docker compose exec mwc mwc download-missing-subtitles
 ```
 
 7. Tweet a random movie
 
 ```
-$ mwc tweet-movie
+$ docker compose exec mwc mwc tweet-movie
 ```

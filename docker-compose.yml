@@ -7,4 +7,18 @@ services:
     image: mwc
     volumes:
       - .:/usr/src/app/MovieWordCloud
-    env_file: configuration.env
+    env_file:
+      - configuration.env
+      - auth.env
+    links:
+      - database
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: mwc
+      POSTGRES_PASSWORD: mwc
+      POSTGRES_DB: mwc

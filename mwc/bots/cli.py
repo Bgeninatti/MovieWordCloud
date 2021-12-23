@@ -22,7 +22,7 @@ def tweet_movie(srt_folder, language, twitter_credetials, twitter_account_name):
     Tweets a random movie stored in the local database.
     """
     movie = get_next_movie()
-    log.info("Selected movie: Name='%s', LanguageId='%s'", movie.name, language)
+    log.info("Selected movie: Name='%s', LanguageId='%s'", movie.original_title, language)
     stop_words = get_stop_words()
     wc = WordCloud(movie, stop_words, srt_folder)
     wc.to_file()
