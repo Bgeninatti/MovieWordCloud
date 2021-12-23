@@ -1,6 +1,6 @@
 import datetime
 
-from peewee import (CharField, DateTimeField, IntegerField, Model, fn, DateField, PostgresqlDatabase)
+from peewee import (CharField, DateTimeField, IntegerField, Model, fn, DateField, PostgresqlDatabase, SQL)
 
 import logging
 
@@ -14,8 +14,12 @@ class BaseModel(Model):
         database = database
 
 
+class BigIntegerField(IntegerField):
+    field_type = 'BIGINT'
+
+
 class Movie(BaseModel):
-    budget = IntegerField()
+    budget = BigIntegerField()
     tmdb_id = IntegerField()
     imdb_id = CharField()
     original_language = CharField()
@@ -23,7 +27,7 @@ class Movie(BaseModel):
     popularity = IntegerField()
     poster_path = CharField()
     release_date = DateField()
-    revenue = IntegerField()
+    revenue = BigIntegerField()
     runtime = IntegerField()
     opensubtittle_id = CharField(null=True)
     srt_file = CharField(null=True)
