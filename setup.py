@@ -27,6 +27,7 @@ setuptools.setup(
         'IMDbPY==6.8',
         'click==8.0.3',
         'tweepy==4.3.0',
+        'psycopg2',
     ],
     python_requires='>=3.6',
     entry_points={

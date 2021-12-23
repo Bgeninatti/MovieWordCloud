@@ -15,8 +15,8 @@ log = logging.getLogger(__name__)
 @click.group(name='mwc')
 @click.pass_context
 def main(ctx):
-    init_db(CONFIG['DB_PATH'])
     """MovieWordCloud CLI"""
+    init_db(**CONFIG['DB'])
     ctx.ensure_object(dict)
     config_logger()
     log.info("Init the main application")
