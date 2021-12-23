@@ -25,7 +25,7 @@ class TmdbClient:
         if not data['imdb_id']:
             return
         return Movie(
-            budget=data['budget'],
+            budget=round(data['budget'] / 1000),
             tmdb_id=data['id'],
             imdb_id=data['imdb_id'],
             original_language=data['original_language'],
@@ -33,7 +33,7 @@ class TmdbClient:
             popularity=data['popularity'],
             poster_path=data['poster_path'],
             release_date=datetime.strptime(data['release_date'], "%Y-%m-%d"),
-            revenue=data['revenue'],
+            revenue=round(data['revenue'] / 1000),
             runtime=data['runtime'],
         )
 
