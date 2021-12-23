@@ -7,7 +7,9 @@ services:
     image: mwc
     volumes:
       - .:/usr/src/app/MovieWordCloud
-    env_file: configuration.env
+    env_file:
+      - configuration.env
+      - auth.env
     links:
       - database
   database:
