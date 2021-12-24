@@ -2,9 +2,7 @@ import datetime
 
 from peewee import (CharField, DateTimeField, IntegerField, Model, DateField, PostgresqlDatabase)
 
-import logging
 
-log = logging.getLogger(__name__)
 database = PostgresqlDatabase(None)
 
 
