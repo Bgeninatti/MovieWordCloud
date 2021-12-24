@@ -3,9 +3,9 @@ import click
 import logging
 
 from mwc.cfg import load_config
-from mwc.db.models import Movie
 
 from .opensubtitles import OpenSubtitles
+from ..db.queries import get_movies_without_subtitles
 
 log = logging.getLogger(__name__)
 CONFIG = load_config()
@@ -18,7 +18,7 @@ def download_missing_subtitles(srt_folder, language):
     """
     Downloads subtitles for movies in the local database that doesn't have one yet.
     """
-    movies = Movie.select().where(Movie.opensubtittle_id.is_null())
+    movies = get_movies_without_subtitles()
     os_client = OpenSubtitles(srt_folder, language)
     log.info("Movies with missing subtitles: movies_count=%s", len(movies))
 

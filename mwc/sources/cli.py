@@ -1,10 +1,10 @@
 import click
 import logging
-from mwc.db.models import Movie
 
 from mwc.cfg import load_config
 
 from .tmdb import TmdbClient
+from ..db.queries import get_all_tmdb_ids
 
 log = logging.getLogger(__name__)
 CONFIG = load_config()
@@ -17,12 +17,12 @@ def sync_tmdb(api_key):
     Populates the local databse with movies from an IMDB ranking
     """
     tmdb_client = TmdbClient(api_key)
-    existing_movies = {m.tmdb_id for m in Movie.select()}
+    tmdb_ids = get_all_tmdb_ids()
 
     log.info("Searching most popular movies")
     popular_movies = tmdb_client.get_most_popular(pages=CONFIG['FETCH_RANKING_PAGES'])
     new_movies = [tmdb_id for tmdb_id in popular_movies
-                  if tmdb_id not in existing_movies]
+                  if tmdb_id not in tmdb_ids]
 
     log.info("New movies found: %d", len(new_movies))
 
