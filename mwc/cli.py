@@ -1,7 +1,7 @@
 import click
 
 from mwc.cfg import load_config
-from mwc.models import init_db
+from mwc.db.models import init_db
 from mwc.logger import config_logger
 import logging
 from mwc.bots.cli import tweet_movie

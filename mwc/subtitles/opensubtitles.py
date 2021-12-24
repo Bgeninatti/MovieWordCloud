@@ -6,7 +6,7 @@ from typing import Dict, List
 import requests
 import json
 import logging
-from mwc.models import Movie
+from mwc.db.models import Movie
 
 
 from mwc.helpers import get_headers

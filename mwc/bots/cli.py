@@ -4,7 +4,7 @@ import logging
 from mwc.cfg import load_config
 
 from mwc.helpers import get_stop_words
-from mwc.models import get_next_movie
+from ..db.queries import get_next_movie
 from mwc.wordcloud import WordCloud
 from .twitter import TwitterClient
 
