@@ -2,14 +2,11 @@ import gzip
 from io import BytesIO, StringIO
 
 import os
-from typing import Dict, List
+from typing import Dict, List, Optional
 import requests
 import json
 import logging
-from mwc.models import Movie
-
-
-from mwc.helpers import get_headers
+from mwc.db.models import Movie
 
 from .subtitle import Subtitle
 
@@ -18,7 +15,8 @@ log = logging.getLogger(__name__)
 
 class OpenSubtitles:
 
-    SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language}'
+    _SEARCH_BY_IMDB_URL = 'https://rest.opensubtitles.org/search/imdbid-{imdb_id}/sublanguageid-{language}'
+    _HEADERS = {'User-agent': 'TemporaryUserAgent v1.2'}
 
     def __init__(self, srt_folder: str, language: str):
         """Check if the srt folder exist and create it
@@ -60,13 +58,12 @@ class OpenSubtitles:
             List[Dict]: List of dictionaries that represent each
             subtitle, sorted by score
         """
-        url = self.SEARCH_BY_IMDB_URL.format(imdb_id=imdb_id, language=self.language)
-        headers = get_headers()
-        response = requests.get(url, headers=headers)
+        url = self._SEARCH_BY_IMDB_URL.format(imdb_id=imdb_id, language=self.language)
+        response = requests.get(url, headers=self._HEADERS)
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
 
-    def get_valid_subtitle(self, movie: Movie, srt_folder: str) -> Subtitle:
+    def get_valid_subtitle(self, movie: Movie, srt_folder: str) -> Optional[Subtitle]:
         """From a IMDB movie search teh subtitles on opensubtitle.
         Get the best rakend subtitle and return a Subtitle instance
         for the DB.

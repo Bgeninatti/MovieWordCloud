@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import requests
-from mwc.models import Movie
+from mwc.db.models import Movie
 
 
 class TmdbClient:
