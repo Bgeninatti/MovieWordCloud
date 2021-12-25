@@ -29,7 +29,3 @@ def tokenize_text(text):
 def get_stop_words():
     with open(CONFIG['STOP_WORDS_JSON_FILE']) as json_file:
         return json.loads(json_file.read())
-
-
-def get_headers():
-    return {'User-agent': 'TemporaryUserAgent v1.2'}
