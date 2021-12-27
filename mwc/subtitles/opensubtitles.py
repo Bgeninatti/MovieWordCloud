@@ -79,11 +79,11 @@ class OpenSubtitles:
             all_subtitles = self.search_subtitles(movie.imdb_id)
         except json.JSONDecodeError as error:
             # Sometimes opensubtitles do not return a JSON for some reason :/
-            log.error("Error decoding OpenSubtitle response: reason='%s'", error)
+            log.error("Error decoding OpenSubtitle response: imdb_id=%s reason='%s'", movie.imdb_id, error)
             return
 
-        log.info(
-            "Subtitles found: imdb_id=%s, subtitles_count=%d",
+        log.debug(
+            "Subtitles found: imdb_id=%s subtitles_count=%d",
             movie.imdb_id, len(all_subtitles)
         )
 
@@ -92,7 +92,7 @@ class OpenSubtitles:
             try:
                 srt_file = self.download_subtitle(sub['SubDownloadLink'], "utf-8")
             except (UnicodeEncodeError, UnicodeDecodeError) as error:
-                log.error("Error: reason='%s'", error)
+                log.debug("Error: imdb_id=%s reason='%s'", movie.imdb_id, error)
                 continue
             subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file, self.srt_folder)
             if subtitle.is_valid():
@@ -100,7 +100,7 @@ class OpenSubtitles:
                 break
 
         if not subtitle:
-            log.error("Error: reason='No valid subtitle found'")
+            log.error("Error: imdb_id=%s reason='No valid subtitle found'", movie.imdb_id)
             return
 
         return subtitle

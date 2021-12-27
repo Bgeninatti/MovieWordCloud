@@ -18,7 +18,7 @@ class SubtitlesService:
         saved_subtitles = 0
         for movie in movies:
             subtitle = self._subtitles.get_valid_subtitle(movie)
-            if subtitle:
+            if subtitle is not None:
                 movie.opensubtittle_id = subtitle.subtitle_id
                 movie.srt_file = subtitle.srt_location
                 movie.save()
