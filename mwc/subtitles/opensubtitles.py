@@ -28,6 +28,7 @@ class OpenSubtitles:
         self.language = language
         if not os.path.exists(srt_folder):
             os.mkdir(srt_folder)
+        self.srt_folder = srt_folder
 
     def download_subtitle(self, sub_download_link: str, encoding="utf-8") -> StringIO:
         """Download, extract and read the subtitle.
@@ -63,14 +64,13 @@ class OpenSubtitles:
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
 
-    def get_valid_subtitle(self, movie: Movie, srt_folder: str) -> Optional[Subtitle]:
+    def get_valid_subtitle(self, movie: Movie) -> Optional[Subtitle]:
         """From a IMDB movie search teh subtitles on opensubtitle.
         Get the best rakend subtitle and return a Subtitle instance
         for the DB.
 
         Args:
             movie (Movie): model that represent a IMDB movie
-            srt_folder (str): path of the movies folder TODO: Get absolute payh
 
         Returns:
             Subtitle: Subtitle model instance
@@ -94,7 +94,7 @@ class OpenSubtitles:
             except (UnicodeEncodeError, UnicodeDecodeError) as error:
                 log.error("Error: reason='%s'", error)
                 continue
-            subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file, srt_folder)
+            subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file, self.srt_folder)
             if subtitle.is_valid():
                 subtitle.save_srt_file()
                 break
