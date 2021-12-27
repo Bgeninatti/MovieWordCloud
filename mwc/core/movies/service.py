@@ -1,7 +1,7 @@
 import logging
 
-from mwc.db.queries import get_existing_tmdb_ids
-from mwc.movies.tmdb import TmdbClient
+from mwc.core.db.queries import get_existing_tmdb_ids
+from mwc.core.movies.tmdb import TmdbClient
 
 log = logging.getLogger(__name__)
 

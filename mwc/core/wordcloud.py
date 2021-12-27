@@ -3,9 +3,9 @@ import os
 
 from wordcloud import WordCloud as WC
 
-from .cfg import load_config
-from .helpers import tokenize_text
-from .subtitles.subtitle import Subtitle
+from mwc.core.cfg import load_config
+from mwc.core.helpers import tokenize_text
+from mwc.core.subtitles.subtitle import Subtitle
 
 CONFIG = load_config()
 

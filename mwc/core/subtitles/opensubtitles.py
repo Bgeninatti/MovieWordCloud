@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 import requests
 import json
 import logging
-from mwc.db.models import Movie
+from mwc.core.db.models import Movie
 
 from .subtitle import Subtitle
 

@@ -1,7 +1,7 @@
 import click
 import logging
 
-from mwc.cfg import load_config
+from mwc.core.cfg import load_config
 from .service import MoviesService
 
 log = logging.getLogger(__name__)

@@ -1,6 +1,6 @@
 from peewee import fn
 
-from mwc.db.models import Movie
+from mwc.core.db.models import Movie
 
 
 def get_all_movies_with_subtitles():

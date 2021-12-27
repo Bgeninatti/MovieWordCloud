@@ -1,7 +1,7 @@
 import logging
 
-from mwc.db.queries import get_movies_without_subtitles
-from mwc.subtitles.opensubtitles import OpenSubtitles
+from mwc.core.db.queries import get_movies_without_subtitles
+from mwc.core.subtitles.opensubtitles import OpenSubtitles
 
 log = logging.getLogger(__name__)
 

@@ -1,12 +1,12 @@
 import click
 
-from mwc.cfg import load_config
-from mwc.db.models import init_db
-from mwc.logger import config_logger
+from mwc.core.cfg import load_config
+from mwc.core.db.models import init_db
+from mwc.core.logger import config_logger
 import logging
 from mwc.bots.cli import tweet_movie
-from mwc.movies.cli import sync_tmdb
-from mwc.subtitles.cli import download_missing_subtitles
+from mwc.core.movies.cli import sync_tmdb
+from mwc.core.subtitles.cli import download_missing_subtitles
 
 CONFIG = load_config()
 log = logging.getLogger(__name__)
