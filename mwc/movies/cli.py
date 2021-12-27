@@ -2,9 +2,7 @@ import click
 import logging
 
 from mwc.cfg import load_config
-
-from .tmdb import TmdbClient
-from ..db.queries import get_existing_tmdb_ids
+from .service import MoviesService
 
 log = logging.getLogger(__name__)
 CONFIG = load_config()
@@ -12,24 +10,10 @@ CONFIG = load_config()
 
 @click.command()
 @click.argument('api_key', type=str, default=CONFIG['TMDB_API_KEY'])
-def sync_tmdb(api_key):
+@click.argument('pages', type=int, default=CONFIG['FETCH_RANKING_PAGES'])
+def sync_tmdb(api_key, pages):
     """
-    Populates the local databse with movies from an IMDB ranking
+    Populates the local databse with new movies
     """
-    tmdb_client = TmdbClient(api_key)
-    tmdb_ids = get_existing_tmdb_ids()
-
-    fetched_movies = tmdb_client.fetch(pages=CONFIG['FETCH_RANKING_PAGES'])
-    new_movies = {
-        tmdb_id for tmdb_id in fetched_movies
-        if tmdb_id not in tmdb_ids
-    }
-
-    log.info("New movies found: %d", len(new_movies))
-
-    for tmdb_id in new_movies:
-        movie = tmdb_client.get_movie(tmdb_id)
-        if not movie:
-            log.warning("No IMDB Id found for movie: tmdb_id=%s", tmdb_id)
-            continue
-        movie.save()
+    service = MoviesService(tmdb_api_key=api_key, fetch_ranking_pages=pages)
+    service.sync()
