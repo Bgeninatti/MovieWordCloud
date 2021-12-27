@@ -1,6 +1,6 @@
 from peewee import fn
 
-from mwc.db.models import Movie
+from mwc.core.db.models import Movie
 
 
 def get_all_movies_with_subtitles():
@@ -8,7 +8,7 @@ def get_all_movies_with_subtitles():
         .where(Movie.opensubtittle_id.is_null(False) & Movie.srt_file.is_null(False))
 
 
-def get_all_tmdb_ids():
+def get_existing_tmdb_ids():
     return {m.tmdb_id for m in Movie.select()}
 
 

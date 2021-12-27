@@ -3,7 +3,7 @@ import json
 import re
 import string
 
-from .cfg import load_config
+from mwc.core.cfg import load_config
 
 CONFIG = load_config()
 
