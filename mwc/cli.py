@@ -5,7 +5,7 @@ from mwc.db.models import init_db
 from mwc.logger import config_logger
 import logging
 from mwc.bots.cli import tweet_movie
-from mwc.sources.cli import sync_tmdb
+from mwc.movies.cli import sync_tmdb
 from mwc.subtitles.cli import download_missing_subtitles
 
 CONFIG = load_config()
