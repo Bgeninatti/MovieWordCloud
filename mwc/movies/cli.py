@@ -4,7 +4,7 @@ import logging
 from mwc.cfg import load_config
 
 from .tmdb import TmdbClient
-from ..db.queries import get_all_tmdb_ids
+from ..db.queries import get_existing_tmdb_ids
 
 log = logging.getLogger(__name__)
 CONFIG = load_config()
@@ -17,7 +17,7 @@ def sync_tmdb(api_key):
     Populates the local databse with movies from an IMDB ranking
     """
     tmdb_client = TmdbClient(api_key)
-    tmdb_ids = get_all_tmdb_ids()
+    tmdb_ids = get_existing_tmdb_ids()
 
     fetched_movies = tmdb_client.fetch(pages=CONFIG['FETCH_RANKING_PAGES'])
     new_movies = {
