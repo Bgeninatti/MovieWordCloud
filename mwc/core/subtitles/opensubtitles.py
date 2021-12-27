@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 import requests
 import json
 import logging
-from mwc.db.models import Movie
+from mwc.core.db.models import Movie
 
 from .subtitle import Subtitle
 
@@ -28,6 +28,7 @@ class OpenSubtitles:
         self.language = language
         if not os.path.exists(srt_folder):
             os.mkdir(srt_folder)
+        self.srt_folder = srt_folder
 
     def download_subtitle(self, sub_download_link: str, encoding="utf-8") -> StringIO:
         """Download, extract and read the subtitle.
@@ -63,14 +64,13 @@ class OpenSubtitles:
         sorted_subtitles = sorted(response.json(), key=lambda item: item['Score'])
         return sorted_subtitles
 
-    def get_valid_subtitle(self, movie: Movie, srt_folder: str) -> Optional[Subtitle]:
+    def get_valid_subtitle(self, movie: Movie) -> Optional[Subtitle]:
         """From a IMDB movie search teh subtitles on opensubtitle.
         Get the best rakend subtitle and return a Subtitle instance
         for the DB.
 
         Args:
             movie (Movie): model that represent a IMDB movie
-            srt_folder (str): path of the movies folder TODO: Get absolute payh
 
         Returns:
             Subtitle: Subtitle model instance
@@ -79,11 +79,11 @@ class OpenSubtitles:
             all_subtitles = self.search_subtitles(movie.imdb_id)
         except json.JSONDecodeError as error:
             # Sometimes opensubtitles do not return a JSON for some reason :/
-            log.error("Error decoding OpenSubtitle response: reason='%s'", error)
+            log.error("Error decoding OpenSubtitle response: imdb_id=%s reason='%s'", movie.imdb_id, error)
             return
 
-        log.info(
-            "Subtitles found: imdb_id=%s, subtitles_count=%d",
+        log.debug(
+            "Subtitles found: imdb_id=%s subtitles_count=%d",
             movie.imdb_id, len(all_subtitles)
         )
 
@@ -92,16 +92,15 @@ class OpenSubtitles:
             try:
                 srt_file = self.download_subtitle(sub['SubDownloadLink'], "utf-8")
             except (UnicodeEncodeError, UnicodeDecodeError) as error:
-                log.error("Error: reason='%s'", error)
+                log.debug("Error: imdb_id=%s reason='%s'", movie.imdb_id, error)
                 continue
-            subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file, srt_folder)
+            subtitle = Subtitle(sub['IDSubtitleFile'], sub['SubLanguageID'], srt_file, self.srt_folder)
             if subtitle.is_valid():
                 subtitle.save_srt_file()
                 break
 
         if not subtitle:
-            log.error("Error: reason='No valid subtitle found'")
+            log.error("Error: imdb_id=%s reason='No valid subtitle found'", movie.imdb_id)
             return
-        log.info("Download succeded")
 
         return subtitle
