@@ -102,6 +102,5 @@ class OpenSubtitles:
         if not subtitle:
             log.error("Error: reason='No valid subtitle found'")
             return
-        log.info("Download succeded")
 
         return subtitle
