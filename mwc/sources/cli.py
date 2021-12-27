@@ -19,10 +19,11 @@ def sync_tmdb(api_key):
     tmdb_client = TmdbClient(api_key)
     tmdb_ids = get_all_tmdb_ids()
 
-    log.info("Searching most popular movies")
-    popular_movies = tmdb_client.get_most_popular(pages=CONFIG['FETCH_RANKING_PAGES'])
-    new_movies = [tmdb_id for tmdb_id in popular_movies
-                  if tmdb_id not in tmdb_ids]
+    fetched_movies = tmdb_client.fetch(pages=CONFIG['FETCH_RANKING_PAGES'])
+    new_movies = {
+        tmdb_id for tmdb_id in fetched_movies
+        if tmdb_id not in tmdb_ids
+    }
 
     log.info("New movies found: %d", len(new_movies))
 
