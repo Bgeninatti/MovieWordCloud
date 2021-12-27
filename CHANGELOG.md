@@ -1,3 +1,25 @@
+## 0.3.0 (2021-12-27)
+
+### Refactor
+
+- **cli**: extract cli from core module
+- **twitter**: implement WordCloudService in CLI
+- **wordcloud**: introduce the WordcloudService
+- **wordcloud**: introduce the wc core module
+- **core**: introduce the core module
+- **subtitles**: improve subtitles sync logging
+- **subtitles**: Implement SubtitlesService in CLI
+- **subtitles**: introduce SubtitlesService
+- **subtitles**: deprecate srt_folder parameter from get_valid_subtitle method
+- **movies**: Implement MoviesService in CLI
+- **movies**: introduce MoviesService
+- **db**: rename query
+- rename sources module to movies
+
+### Feat
+
+- **tmdb**: add top rated movies to fetcher
+
 ## 0.2.0 (2021-12-25)
 
 ### Refactor
