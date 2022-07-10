@@ -32,6 +32,7 @@ class TmdbClient:
         data = self._get(uri)
         if not data['imdb_id']:
             return
+        release_date = datetime.strptime(data['release_date'], "%Y-%m-%d") if data['release_date'] else None
         return Movie(
             budget=round(data['budget'] / 1000),
             tmdb_id=data['id'],
@@ -40,7 +41,7 @@ class TmdbClient:
             original_title=data['original_title'],
             popularity=data['popularity'],
             poster_path=data['poster_path'],
-            release_date=datetime.strptime(data['release_date'], "%Y-%m-%d"),
+            release_date=release_date,
             revenue=round(data['revenue'] / 1000),
             runtime=data['runtime'],
         )

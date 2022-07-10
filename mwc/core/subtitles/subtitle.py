@@ -1,40 +1,53 @@
-from pathlib import Path
+import re
+import string
 
 import srt
-import logging
 
-log = logging.getLogger(__name__)
+import attr
 
 
+class SubtitleError(Exception):
+    ...
+
+
+@attr.s
 class Subtitle:
 
-    def __init__(self, subtitle_id, language, srt_file, srt_folder: str):
-        self.subtitle_id = subtitle_id
-        self.srt_location = Path(srt_folder) / f"{self.subtitle_id}.srt"
-        self.language = language
-        self.file = srt_file
+    subtitle_id: int = attr.ib()
+    language: str = attr.ib()
+    content: str = attr.ib(converter=srt.make_legal_content)
+    xmltag_regex = attr.ib(default=re.compile(r'(<[^>]+>)'))
+    excluded_chars = attr.ib(default=string.punctuation + "¡¿1234567890\\\"")
+    filename: str = attr.ib(init=False)
 
-    def get_lines(self):
-        lines = srt.parse(srt.make_legal_content(self.file.read()))
-        self.file.seek(0)
-        return lines
-
-    def is_valid(self):
+    def __attrs_post_init__(self):
         try:
-            self.get_lines()
-            return True
-        except srt.SRTParseError as error:
-            if "Sorry, maximum download count for IP" in str(error):
-                log.error("Error: reason='API limit reached'")
-                return False
-            log.error("Error: reason='%s'", error)
-            return False
+            self.lines = list(srt.parse(self.content))
+        except srt.SRTParseError:
+            raise SubtitleError(
+                f'Invalid subtitle: subtitle_id={self.subtitle_id} language={self.language}'
+            )
+        self.filename = self.build_filename(self.subtitle_id)
 
-    def save_srt_file(self):
-        with open(self.srt_location, "w") as srtf:
-            srtf.write(self.file.read())
+    @staticmethod
+    def build_filename(subtitle_id):
+        return f'{subtitle_id}.srt'
 
-    @classmethod
-    def get_from_movie(cls, movie, srt_folder):
-        subtitle_id = movie.srt_file.split('/')[-1].replace('.srt', '')
-        return cls(subtitle_id, movie.original_language, open(movie.srt_file), srt_folder)
+    def _tokenize_text(self, text):
+        # Find and remove all xml tags <i>, <font>, etc
+        tags = set(self.xmltag_regex.findall(text))
+        for tag in tags:
+            text = text.replace(tag, '')
+        # Remove punctuation and other stuff
+        excluded_chars = str.maketrans('', '', self.excluded_chars)
+        words = text.translate(excluded_chars) \
+            .strip() \
+            .lower() \
+            .replace('\n', ' ')
+        # Remove duplicated spaces
+        words = re.sub(' +', ' ', words)
+        return words
+
+    def get_words(self):
+        lines = [line.content for line in self.lines]
+        return self._tokenize_text(' '.join(lines))

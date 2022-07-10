@@ -3,7 +3,7 @@ import logging
 from mwc.core.db.queries import get_existing_tmdb_ids
 from mwc.core.movies.tmdb import TmdbClient
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger('mwc')
 
 
 class MoviesService:
@@ -14,21 +14,17 @@ class MoviesService:
 
     def sync(self):
         tmdb_ids = get_existing_tmdb_ids()
-
+        logger.info('Fetching new movies', extra={'pages': self.fetch_ranking_pages})
         fetched_movies = self._tmdb.fetch(pages=self.fetch_ranking_pages)
-        new_movies = {
-            tmdb_id for tmdb_id in fetched_movies
-            if tmdb_id not in tmdb_ids
-        }
-
-        log.info("New movies found: movies_found=%d", len(new_movies))
-
-        saved_movies = 0
-        for tmdb_id in new_movies:
+        new_movies = 0
+        for tmdb_id in fetched_movies:
+            if tmdb_id in tmdb_ids:
+                continue
             movie = self._tmdb.get_movie(tmdb_id)
             if not movie:
-                log.warning("No IMDB Id found for movie: tmdb_id=%s", tmdb_id)
+                logger.warning('No IMDB Id found for movie', extra={'tmdb_id': tmdb_id})
                 continue
             movie.save()
-            saved_movies += 1
-        log.info("New movies saved: movies_saved=%d", saved_movies)
+            logger.info('New movie', extra={'movie': movie})
+            new_movies += 1
+        logger.info('New movies saved', extra={'new_movies': new_movies})

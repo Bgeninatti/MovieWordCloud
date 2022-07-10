@@ -1,30 +1,43 @@
 import logging
-import sys
+import logging.config
 
 
-def config_logger():
-    '''
-    Config log format and level
-    '''
+class ContextLogger(logging.Logger):
+    def _log(self, level, msg, args, exc_info=None, extra=None):
+        msg = f"{msg}"
+        if extra:
+            msg = f"{msg}: {'; '.join((f'{k}={v}' for k, v in extra.items()))}"
+        super()._log(level, msg, args, exc_info, extra)
 
-    # Format de logger message
-    handler = logging.StreamHandler(sys.stdout)  # Sends logging output to streams
-    handler.setLevel(logging.INFO)
 
-    # Format the loggin message file
-    formatter = logging.Formatter(
-        '%(asctime)s - %(threadName)s - %(levelname)s: %(message)s')
-    handler.setFormatter(formatter)
+logging.setLoggerClass(ContextLogger)
 
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s: %(levelname)s [%(filename)s:%(lineno)s] %(message)s',
-        datefmt='%I:%M:%S %p',
-        handlers=[
-            # Save into a file
-            logging.FileHandler('logs.log'),
-            # Get sistem information
-            handler
-        ]
-    )
-    # TODO hacer file handler opcional en funcion de un parametro (Ej: file name que por defecto none)
+
+def setup_logger(lvl="info"):
+
+    config = {
+        "version": 1,
+        "disable_existing_loggers": True,
+        "formatters": {
+            "standard": {
+                "format": "%(asctime)s|[%(levelname)s]|%(module)s:%(funcName)s|%(message)s"
+            },
+        },
+        "handlers": {
+            "default": {
+                "level": lvl.upper(),
+                "formatter": "standard",
+                "class": "logging.StreamHandler",
+                "stream": "ext://sys.stdout",
+            },
+        },
+        "loggers": {
+            'mwc': {
+                "handlers": ["default"],
+                "level": lvl.upper(),
+                "propagate": False,
+            },
+        },
+    }
+
+    logging.config.dictConfig(config)

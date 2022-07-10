@@ -1,26 +1,39 @@
 import logging
+from io import BytesIO
 
 from mwc.core.db.queries import get_movies_without_subtitles
+from mwc.core.storage import get_storage
 from mwc.core.subtitles.opensubtitles import OpenSubtitles
+from mwc.core.subtitles.subtitle import Subtitle
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger('mwc')
 
 
 class SubtitlesService:
 
-    def __init__(self, srt_folder: str, language: str):
-        self._subtitles = OpenSubtitles(srt_folder, language)
+    _storage = get_storage(namespace='subtitles')
+    _provider = OpenSubtitles()
 
     def sync(self):
         movies = get_movies_without_subtitles()
-        log.info("Movies with missing subtitles: movies_count=%s", len(movies))
+        logger.info('Movies with missing subtitles', extra={'movies_count': len(movies)})
 
-        saved_subtitles = 0
+        new_subtitles = 0
         for movie in movies:
-            subtitle = self._subtitles.get_valid_subtitle(movie)
-            if subtitle is not None:
-                movie.opensubtittle_id = subtitle.subtitle_id
-                movie.srt_file = subtitle.srt_location
-                movie.save()
-                saved_subtitles += 1
-        log.info("New subtitles saved: subtitles_saved=%d", saved_subtitles)
+            try:
+                # Get the first valid subtitle
+                subtitle = next(self._provider.get_subtitles(movie))
+            except RuntimeError:
+                logger.warning('No subtitles found', extra={'movie': movie})
+                continue
+            self._storage.save(subtitle.filename, BytesIO(subtitle.content.encode()))
+            movie.subtitle_id = subtitle.subtitle_id
+            movie.save()
+            new_subtitles += 1
+            logger.info('Subtitle found', extra={'movie': movie})
+        logger.info('New subtitles saved', extra={'new_subtitles': new_subtitles})
+
+    def get_from_movie(self, movie):
+        filename = Subtitle.build_filename(movie.subtitle_id)
+        content = self._storage.get(filename)
+        return Subtitle(movie.subtitle_id, movie.original_language, content.text)
