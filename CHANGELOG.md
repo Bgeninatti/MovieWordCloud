@@ -1,3 +1,9 @@
+## 0.3.1 (2022-07-10)
+
+### Refactor
+
+- **core**: a lot of refactors and new stufff
+
 ## 0.3.0 (2021-12-27)
 
 ### Refactor
