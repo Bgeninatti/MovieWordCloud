@@ -17,16 +17,16 @@ class BigIntegerField(IntegerField):
 
 
 class Movie(BaseModel):
-    budget = BigIntegerField()
+    budget = BigIntegerField(null=True)
     tmdb_id = IntegerField()
     imdb_id = CharField()
     original_language = CharField()
     original_title = CharField()
-    popularity = IntegerField()
-    poster_path = CharField()
+    popularity = IntegerField(null=True)
+    poster_path = CharField(null=True)
     release_date = DateField(null=True)
-    revenue = BigIntegerField()
-    runtime = IntegerField()
+    revenue = BigIntegerField(null=True)
+    runtime = IntegerField(null=True)
     subtitle_id = CharField(null=True)
     last_tweet = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
