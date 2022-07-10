@@ -24,13 +24,15 @@ class Movie(BaseModel):
     original_title = CharField()
     popularity = IntegerField()
     poster_path = CharField()
-    release_date = DateField()
+    release_date = DateField(null=True)
     revenue = BigIntegerField()
     runtime = IntegerField()
-    opensubtittle_id = CharField(null=True)
-    srt_file = CharField(null=True)
-    last_upload = DateTimeField(null=True)
+    subtitle_id = CharField(null=True)
+    last_tweet = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
+
+    def __str__(self):
+        return f'<Movie id={self.id} name={self.original_title}>'
 
 
 def init_db(db_name, user, password, host, port):

@@ -1,12 +1,12 @@
 import setuptools
-
+from mwc import __version__
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="mwc-pkg-BGENINATTI",
-    version="0.0.2",
+    version=__version__,
     author="Bruno Geninatti",
     author_email="brunogeninatti@gmail.com",
     description="A bot that tweets wordclouds based on movies scripts",
@@ -22,11 +22,13 @@ setuptools.setup(
     install_requires=[
         'srt==3.0.0',
         'wordcloud==1.8.1',
-        'requests==2.22.0',
+        'requests==2.27.0',
         'peewee==3.13.1',
         'click==8.0.3',
-        'tweepy==4.3.0',
+        'tweepy==4.10.0',
+        'attrs==21.4.0',
         'psycopg2',
+        'dropbox==11.32.0',
     ],
     python_requires='>=3.6',
     entry_points={

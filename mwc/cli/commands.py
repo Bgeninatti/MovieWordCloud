@@ -1,52 +1,71 @@
 import logging
+from datetime import datetime
+from io import BytesIO
 
 import click
 
-from mwc.bots.twitter import TwitterClient
-from mwc.core.cfg import load_config
+from mwc.bots.twitter import TwitterService
 from mwc.core.db.queries import get_next_movie
 from mwc.core.movies.service import MoviesService
 from mwc.core.subtitles.service import SubtitlesService
 from mwc.core.wc.service import WordCloudService
+from mwc.core.wc.stop_words import StopWordsService
+from mwc.core.cfg import settings
 
-log = logging.getLogger(__name__)
-CONFIG = load_config()
+
+logger = logging.getLogger('mwc')
 
 
 @click.command()
-@click.argument('srt_folder', type=str, default=CONFIG['SRT_FOLDER'])
-@click.argument('language', type=str, default=CONFIG['DEFAULT_LANGUAGE_ID'])
-@click.argument('twitter_credetials', type=dict, default=CONFIG['TWITTER_CREDENTIALS'])
-@click.argument('twitter_account_name', type=str, default=CONFIG['TWITTER_ACCOUNT_NAME'])
-def tweet_movie(srt_folder, language, twitter_credetials, twitter_account_name):
+def tweet_movie():
     """
     Tweets a random movie stored in the local database.
     """
-    wc_service = WordCloudService(srt_folder)
-    twitter_client = TwitterClient(**twitter_credetials)
+    wordcloud_service = WordCloudService()
+    twitter_client = TwitterService(**settings['TWITTER_CREDENTIALS'])
+
     movie = get_next_movie()
-    log.info("Selected movie: Name='%s', LanguageId='%s'", movie.original_title, language)
-    wc = wc_service.build_from_movie(movie)
-    twitter_client.tweet_wordcloud(movie, wc.filename, twitter_account_name)
+    logger.info('Selected movie', extra={'movie': movie})
+    message = f"{movie.original_title} ({movie.release_date})\n\n#MovieWordCloud"
+    wordcloud = wordcloud_service.build_from_movie(movie)
+    image_tweet = twitter_client.tweet_image(
+        BytesIO(wordcloud.to_image().tobytes()),
+        f'{movie.tmdb_id}.png',
+        message,
+    )
+    logger.info('Wordcloud tweeted', extra={'tweet_id': image_tweet.id})
+    answer_message = f"https://www.themoviedb.org/movie/{movie.tmdb_id}"
+    answer_tweet = twitter_client.answer_tweet(answer_message, image_tweet.id)
+    logger.info('Answer tweeted', extra={'tweet_id': answer_tweet.id})
+    movie.last_tweet = datetime.now()
+    movie.save()
 
 
 @click.command()
-@click.argument('srt_folder', type=str, default=CONFIG['SRT_FOLDER'])
-@click.argument('language', type=str, default=CONFIG['DEFAULT_LANGUAGE_ID'])
-def download_missing_subtitles(srt_folder, language):
+def sync_subtitles():
     """
     Downloads subtitles for movies in the local database that doesn't have one yet.
     """
-    service = SubtitlesService(srt_folder=srt_folder, language=language)
+    service = SubtitlesService()
     service.sync()
 
 
 @click.command()
-@click.argument('api_key', type=str, default=CONFIG['TMDB_API_KEY'])
-@click.argument('pages', type=int, default=CONFIG['FETCH_RANKING_PAGES'])
-def sync_tmdb(api_key, pages):
+def sync_movies():
     """
     Populates the local databse with new movies
     """
-    service = MoviesService(tmdb_api_key=api_key, fetch_ranking_pages=pages)
+    service = MoviesService(
+        tmdb_api_key=settings['TMDB_API_KEY'],
+        fetch_ranking_pages=settings['FETCH_RANKING_PAGES'],
+    )
     service.sync()
+
+
+@click.command()
+def sync_stopwords():
+    """
+    Generate stopwords for all the available languages
+    """
+    stopwords_service = StopWordsService()
+    stopwords_service.sync()
