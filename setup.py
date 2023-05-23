@@ -22,7 +22,7 @@ setuptools.setup(
     install_requires=[
         'srt==3.0.0',
         'wordcloud==1.8.1',
-        'requests==2.27.0',
+        'requests==2.31.0',
         'peewee==3.13.1',
         'click==8.0.3',
         'tweepy==4.10.0',
